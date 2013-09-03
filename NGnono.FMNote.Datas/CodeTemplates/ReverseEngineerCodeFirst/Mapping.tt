@@ -1,4 +1,4 @@
-<#
+﻿<#
 // Simplifying assumptions based on reverse engineer rules
 //  - No complex types
 //  - One entity container
@@ -30,9 +30,9 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace <#= code.EscapeNamespace(efHost.Namespace) #>
 {
-    public class <#= efHost.EntityType.Name #>Map : EntityTypeConfiguration<<#= efHost.EntityType.Name #>>
+    public partial class <#= efHost.EntityType.Name #>EntityMap : EntityTypeConfiguration<<#= efHost.EntityType.Name #>Entity>
     {
-        public <#= efHost.EntityType.Name #>Map()
+        public <#= efHost.EntityType.Name #>EntityMap()
         {
             // Primary Key
 <#

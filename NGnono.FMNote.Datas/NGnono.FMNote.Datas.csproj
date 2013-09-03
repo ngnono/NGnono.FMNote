@@ -35,6 +35,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EFProviderWrapperToolkit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=def642f226e0e59b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommunityEFProviderWrappers.EFProviderWrapperToolkit.1.0.0\lib\net40-Client\EFProviderWrapperToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="EFTracingProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=def642f226e0e59b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommunityEFProviderWrappers.EFTracingProvider.1.0.0\lib\net40-Client\EFTracingProvider.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
@@ -50,6 +58,71 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AdminAccessRight.cs" />
+    <Compile Include="Models\Bill.cs" />
+    <Compile Include="Models\BillTagRelation.cs" />
+    <Compile Include="Models\Brand.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Favorite.cs" />
+    <Compile Include="Models\Feedback.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\Like.cs" />
+    <Compile Include="Models\Mapping\AdminAccessRightMap.cs" />
+    <Compile Include="Models\Mapping\BillMap.cs" />
+    <Compile Include="Models\Mapping\BillTagRelationMap.cs" />
+    <Compile Include="Models\Mapping\BrandMap.cs" />
+    <Compile Include="Models\Mapping\CategoryMap.cs" />
+    <Compile Include="Models\Mapping\CommentMap.cs" />
+    <Compile Include="Models\Mapping\FavoriteMap.cs" />
+    <Compile Include="Models\Mapping\FeedbackMap.cs" />
+    <Compile Include="Models\Mapping\GroupMap.cs" />
+    <Compile Include="Models\Mapping\LikeMap.cs" />
+    <Compile Include="Models\Mapping\OutsiteUserMap.cs" />
+    <Compile Include="Models\Mapping\PointHistoryMap.cs" />
+    <Compile Include="Models\Mapping\PriceSettingMap.cs" />
+    <Compile Include="Models\Mapping\ProductMap.cs" />
+    <Compile Include="Models\Mapping\ProductStageMap.cs" />
+    <Compile Include="Models\Mapping\ProductUploadJobMap.cs" />
+    <Compile Include="Models\Mapping\Promotion2ProductMap.cs" />
+    <Compile Include="Models\Mapping\PromotionBrandRelationMap.cs" />
+    <Compile Include="Models\Mapping\PromotionMap.cs" />
+    <Compile Include="Models\Mapping\RemindMap.cs" />
+    <Compile Include="Models\Mapping\ResourceMap.cs" />
+    <Compile Include="Models\Mapping\ResourceStageMap.cs" />
+    <Compile Include="Models\Mapping\RoleAccessRightMap.cs" />
+    <Compile Include="Models\Mapping\RoleMap.cs" />
+    <Compile Include="Models\Mapping\SeedMap.cs" />
+    <Compile Include="Models\Mapping\ShareHistoryMap.cs" />
+    <Compile Include="Models\Mapping\StoreMap.cs" />
+    <Compile Include="Models\Mapping\TagMap.cs" />
+    <Compile Include="Models\Mapping\UserAccountMap.cs" />
+    <Compile Include="Models\Mapping\UserMap.cs" />
+    <Compile Include="Models\Mapping\UserRoleMap.cs" />
+    <Compile Include="Models\Mapping\VerifyCodeMap.cs" />
+    <Compile Include="Models\NGnono_FMNoteContext.cs" />
+    <Compile Include="Models\OutsiteUser.cs" />
+    <Compile Include="Models\PointHistory.cs" />
+    <Compile Include="Models\PriceSetting.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductStage.cs" />
+    <Compile Include="Models\ProductUploadJob.cs" />
+    <Compile Include="Models\Promotion.cs" />
+    <Compile Include="Models\Promotion2Product.cs" />
+    <Compile Include="Models\PromotionBrandRelation.cs" />
+    <Compile Include="Models\Remind.cs" />
+    <Compile Include="Models\Resource.cs" />
+    <Compile Include="Models\ResourceStage.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\RoleAccessRight.cs" />
+    <Compile Include="Models\Seed.cs" />
+    <Compile Include="Models\ShareHistory.cs" />
+    <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserAccount.cs" />
+    <Compile Include="Models\UserRole.cs" />
+    <Compile Include="Models\VerifyCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
