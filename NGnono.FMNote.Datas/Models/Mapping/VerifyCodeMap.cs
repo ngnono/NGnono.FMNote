@@ -31,6 +31,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.VerifyMode).HasColumnName("VerifyMode");
             this.Property(t => t.VerifySource).HasColumnName("VerifySource");
             this.Property(t => t.Status).HasColumnName("Status");
+			Init();
         }
+
+		public partial void Init();
     }
 }

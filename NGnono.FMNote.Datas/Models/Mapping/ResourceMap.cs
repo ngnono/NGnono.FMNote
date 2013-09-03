@@ -47,6 +47,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.Height).HasColumnName("Height");
             this.Property(t => t.ContentSize).HasColumnName("ContentSize");
             this.Property(t => t.ExtName).HasColumnName("ExtName");
+			Init();
         }
+
+		public partial void Init();
     }
 }

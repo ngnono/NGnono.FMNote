@@ -11,7 +11,7 @@ namespace NGnono.FMNote.Datas.Models
         public virtual AdminAccessRightEntity AdminAccessRight { get; set; }
         public virtual RoleEntity Role { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

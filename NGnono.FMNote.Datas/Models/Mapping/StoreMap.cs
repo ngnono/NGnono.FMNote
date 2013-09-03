@@ -52,6 +52,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .WithMany(t => t.Stores)
                 .HasForeignKey(d => d.Group_Id);
 
+			Init();
         }
+
+		public partial void Init();
     }
 }

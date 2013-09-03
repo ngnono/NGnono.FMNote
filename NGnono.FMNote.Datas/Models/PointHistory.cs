@@ -19,7 +19,7 @@ namespace NGnono.FMNote.Datas.Models
         public int UpdatedUser { get; set; }
         public System.DateTime UpdatedDate { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

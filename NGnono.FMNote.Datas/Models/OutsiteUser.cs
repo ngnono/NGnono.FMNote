@@ -15,7 +15,7 @@ namespace NGnono.FMNote.Datas.Models
         public int Status { get; set; }
         public int OutsiteType { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

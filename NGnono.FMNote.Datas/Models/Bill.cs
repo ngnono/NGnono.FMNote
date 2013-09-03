@@ -24,7 +24,7 @@ namespace NGnono.FMNote.Datas.Models
         public virtual CategoryEntity Category { get; set; }
         public virtual UserEntity User { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

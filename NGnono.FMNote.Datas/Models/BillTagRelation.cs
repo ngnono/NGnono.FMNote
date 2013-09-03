@@ -11,7 +11,7 @@ namespace NGnono.FMNote.Datas.Models
         public System.DateTime CreatedDate { get; set; }
         public int CreatedUser { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

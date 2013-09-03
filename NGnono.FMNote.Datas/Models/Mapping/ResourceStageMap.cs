@@ -44,6 +44,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.InDate).HasColumnName("InDate");
             this.Property(t => t.Status).HasColumnName("Status");
             this.Property(t => t.UploadGroupId).HasColumnName("UploadGroupId");
+			Init();
         }
+
+		public partial void Init();
     }
 }

@@ -23,7 +23,7 @@ namespace NGnono.FMNote.Datas.Models
         public int UpdateUser { get; set; }
         public virtual ICollection<BillEntity> Bills { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

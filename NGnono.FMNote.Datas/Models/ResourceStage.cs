@@ -19,7 +19,7 @@ namespace NGnono.FMNote.Datas.Models
         public int Status { get; set; }
         public Nullable<int> UploadGroupId { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

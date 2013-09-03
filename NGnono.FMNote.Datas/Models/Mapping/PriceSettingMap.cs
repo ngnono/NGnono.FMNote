@@ -33,6 +33,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .WithMany(t => t.PriceSettings)
                 .HasForeignKey(d => d.SourceId);
 
+			Init();
         }
+
+		public partial void Init();
     }
 }

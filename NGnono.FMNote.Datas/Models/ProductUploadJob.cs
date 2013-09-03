@@ -11,7 +11,7 @@ namespace NGnono.FMNote.Datas.Models
         public string FileName { get; set; }
         public Nullable<int> Status { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

@@ -17,6 +17,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.ProdId).HasColumnName("ProdId");
             this.Property(t => t.ProId).HasColumnName("ProId");
             this.Property(t => t.Status).HasColumnName("Status");
+			Init();
         }
+
+		public partial void Init();
     }
 }

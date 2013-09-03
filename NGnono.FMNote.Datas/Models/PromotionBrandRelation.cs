@@ -10,7 +10,7 @@ namespace NGnono.FMNote.Datas.Models
         public int Brand_Id { get; set; }
         public System.DateTime CreatedDate { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

@@ -16,7 +16,7 @@ namespace NGnono.FMNote.Datas.Models
         public string VerifySource { get; set; }
         public int Status { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

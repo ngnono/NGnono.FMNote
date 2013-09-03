@@ -17,7 +17,7 @@ namespace NGnono.FMNote.Datas.Models
         public int Status { get; set; }
         public virtual UserEntity User { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

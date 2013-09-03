@@ -36,7 +36,7 @@ namespace NGnono.FMNote.Datas.Models
         public virtual StoreEntity Store { get; set; }
         public virtual TagEntity Tag { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

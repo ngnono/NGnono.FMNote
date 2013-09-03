@@ -18,6 +18,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.Tag_Id).HasColumnName("Tag_Id");
             this.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             this.Property(t => t.CreatedUser).HasColumnName("CreatedUser");
+			Init();
         }
+
+		public partial void Init();
     }
 }

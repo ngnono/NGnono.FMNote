@@ -72,7 +72,7 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
     }
 #>
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId
@@ -80,12 +80,12 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
         public override object EntityId
         {       
 <#
-         if (efHost.EntityType.KeyMembers.Count() == 0)
-         {
+			if (efHost.EntityType.KeyMembers.Count() == 0)
+			{
 #>
-            get { throw new NotImplementedException(); }
+				get { throw new NotImplementedException(); }
 <#
-         }
+			}
 #>
 <#
             else if (efHost.EntityType.KeyMembers.Count() == 1)

@@ -20,7 +20,7 @@ namespace NGnono.FMNote.Datas.Models
         public Nullable<int> InUser { get; set; }
         public virtual ICollection<RoleAccessRightEntity> RoleAccessRights { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

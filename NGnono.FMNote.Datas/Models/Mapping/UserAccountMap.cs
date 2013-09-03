@@ -29,6 +29,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .WithMany(t => t.UserAccounts)
                 .HasForeignKey(d => d.User_Id);
 
+			Init();
         }
+
+		public partial void Init();
     }
 }

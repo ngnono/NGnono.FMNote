@@ -21,7 +21,7 @@ namespace NGnono.FMNote.Datas.Models
         public System.DateTime UpdatedDate { get; set; }
         public virtual ProductEntity Product { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

@@ -28,7 +28,7 @@ namespace NGnono.FMNote.Datas.Models
         public Nullable<bool> IsProdBindable { get; set; }
         public Nullable<int> PublicationLimit { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

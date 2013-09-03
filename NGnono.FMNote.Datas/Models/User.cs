@@ -32,7 +32,7 @@ namespace NGnono.FMNote.Datas.Models
         public virtual ICollection<CommentEntity> Comments { get; set; }
         public virtual ICollection<UserAccountEntity> UserAccounts { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

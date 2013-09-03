@@ -28,6 +28,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
             this.Property(t => t.UpdatedUser).HasColumnName("UpdatedUser");
             this.Property(t => t.Status).HasColumnName("Status");
+			Init();
         }
+
+		public partial void Init();
     }
 }

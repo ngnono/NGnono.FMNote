@@ -24,7 +24,7 @@ namespace NGnono.FMNote.Datas.Models
         public int ContentSize { get; set; }
         public string ExtName { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

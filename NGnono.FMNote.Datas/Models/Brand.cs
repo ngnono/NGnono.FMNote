@@ -24,7 +24,7 @@ namespace NGnono.FMNote.Datas.Models
         public string Group { get; set; }
         public virtual ICollection<ProductEntity> Products { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

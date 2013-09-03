@@ -9,7 +9,7 @@ namespace NGnono.FMNote.Datas.Models
         public Nullable<int> Id { get; set; }
         public Nullable<int> Value { get; set; }
 
- #region Overrides of BaseEntity
+        #region Overrides of BaseEntity
 
         /// <summary>
         /// KeyMemberId

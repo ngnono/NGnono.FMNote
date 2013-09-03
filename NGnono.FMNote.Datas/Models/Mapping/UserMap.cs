@@ -56,6 +56,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.Logo).HasColumnName("Logo");
             this.Property(t => t.Description).HasColumnName("Description");
             this.Property(t => t.Gender).HasColumnName("Gender");
+			Init();
         }
+
+		public partial void Init();
     }
 }
