@@ -31,9 +31,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
             this.Property(t => t.UpdatedUser).HasColumnName("UpdatedUser");
             this.Property(t => t.CreatedUser).HasColumnName("CreatedUser");
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }

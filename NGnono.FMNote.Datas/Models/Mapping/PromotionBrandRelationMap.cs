@@ -17,9 +17,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.Promotion_Id).HasColumnName("Promotion_Id");
             this.Property(t => t.Brand_Id).HasColumnName("Brand_Id");
             this.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }

@@ -29,9 +29,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.Description).HasColumnName("Description");
             this.Property(t => t.Status).HasColumnName("Status");
             this.Property(t => t.OutsiteType).HasColumnName("OutsiteType");
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }

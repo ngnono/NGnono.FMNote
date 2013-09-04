@@ -25,9 +25,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .WithMany(t => t.RoleAccessRights)
                 .HasForeignKey(d => d.RoleId);
 
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }

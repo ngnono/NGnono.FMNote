@@ -42,9 +42,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.IsTop).HasColumnName("IsTop");
             this.Property(t => t.IsProdBindable).HasColumnName("IsProdBindable");
             this.Property(t => t.PublicationLimit).HasColumnName("PublicationLimit");
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }

@@ -45,9 +45,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .WithMany(t => t.Bills)
                 .HasForeignKey(d => d.User_Id);
 
-            LastInit();
+			LastInit();
         }
 
-        partial void LastInit();
+		partial void LastInit();
     }
 }

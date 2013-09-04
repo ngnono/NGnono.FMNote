@@ -21,9 +21,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.InUser).HasColumnName("InUser");
             this.Property(t => t.FileName).HasColumnName("FileName");
             this.Property(t => t.Status).HasColumnName("Status");
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }

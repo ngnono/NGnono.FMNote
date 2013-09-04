@@ -59,9 +59,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .WithMany(t => t.Products)
                 .HasForeignKey(d => d.Tag_Id);
 
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }

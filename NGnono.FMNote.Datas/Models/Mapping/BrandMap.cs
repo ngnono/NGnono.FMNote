@@ -49,9 +49,9 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.WebSite).HasColumnName("WebSite");
             this.Property(t => t.Status).HasColumnName("Status");
             this.Property(t => t.Group).HasColumnName("Group");
-			Init();
+			LastInit();
         }
 
-		public partial void Init();
+		partial void LastInit();
     }
 }
