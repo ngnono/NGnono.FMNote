@@ -8,7 +8,7 @@ namespace NGnono.FMNote.Contracts
     /// <summary>
     /// 
     /// </summary>
-    public interface IBillService
+    public interface IBillService : IService
     {
         /// <summary>
         ///  添加

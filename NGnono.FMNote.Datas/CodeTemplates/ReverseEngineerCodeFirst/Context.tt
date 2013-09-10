@@ -115,9 +115,29 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
         }
     }
 
+	#region IEFUnitOfWork
+
+	public interface I<#= efHost.EntityContainer.Name #>EFUnitOfWork : IUnitOfWork
+	{
+<#
+    foreach (var set in efHost.EntityContainer.BaseEntitySets.OfType<EntitySet>())
+    {
+#>
+		/// <summary>
+        /// <#= set.ElementType.Name #>
+        /// </summary>
+        EFRepository<<#= set.ElementType.Name #>Entity, int> <#= set.ElementType.Name #>Repository { get; }
+
+<#
+    }
+#>
+	}
+
+	#endregion
+
 	#region unitOfWork
 
-	public class <#= efHost.EntityContainer.Name #>UnitOfWork : EFUnitOfWork
+	public class <#= efHost.EntityContainer.Name #>UnitOfWork : EFUnitOfWork , I<#= efHost.EntityContainer.Name #>EFUnitOfWork
     {
         public <#= efHost.EntityContainer.Name #>UnitOfWork(DbContext dbContext) : base(dbContext)
         {
