@@ -1,5 +1,6 @@
 ﻿using NGnono.FMNote.Contracts;
 using NGnono.FMNote.Datas.Models;
+using NGnono.FMNote.Repository;
 using NGnono.Framework.Data.EF;
 using NGnono.Framework.Mapping;
 using System;
@@ -13,9 +14,7 @@ namespace NGnono.FMNote.Services
         {
         }
 
-        public dynamic Insert(dynamic model)
-        {
-            return FMNoteUnitOfWork.BillRepository.Insert(Mapper.Map<BillEntity, dynamic>(model));
-        }
+
+
     }
 }

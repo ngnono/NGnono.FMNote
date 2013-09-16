@@ -10,11 +10,6 @@ namespace NGnono.FMNote.Contracts
     /// </summary>
     public interface IBillService : IService
     {
-        /// <summary>
-        ///  添加
-        /// </summary>
-        /// <param name="model">Bill model</param>
-        /// <returns></returns>
-        dynamic Insert(dynamic model);
+        
     }
 }

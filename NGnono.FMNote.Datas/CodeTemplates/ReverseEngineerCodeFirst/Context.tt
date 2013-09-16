@@ -139,28 +139,42 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
 
 	public class <#= efHost.EntityContainer.Name #>UnitOfWork : EFUnitOfWork , I<#= efHost.EntityContainer.Name #>EFUnitOfWork
     {
-        public <#= efHost.EntityContainer.Name #>UnitOfWork(DbContext dbContext) : base(dbContext)
-        {
+		#region fields
+
 <#
     foreach (var set in efHost.EntityContainer.BaseEntitySets.OfType<EntitySet>())
     {
+	    var fieldName = "_"+set.ElementType.Name[0].ToString(CultureInfo.InvariantCulture).ToLower() + set.ElementType.Name.Substring(1, set.ElementType.Name.Length - 1)+"Repository";
 #>
-			<#= set.ElementType.Name #>Repository = new EFRepository<<#= set.ElementType.Name #>Entity, int>(DbContext);
+		/// <summary>
+        /// <#= set.ElementType.Name #>Entity _<#= set.ElementType.Name[0].ToString(CultureInfo.InvariantCulture).ToLower() + set.ElementType.Name.Substring(1, set.ElementType.Name.Length - 1) #>Repository;
+        /// </summary>
+        private EFRepository<<#= set.ElementType.Name #>Entity, int> <#=fieldName #>;
+
 <#
     }
 #>
+		#endregion
+
+	    #region .ctor
+	    
+        public <#= efHost.EntityContainer.Name #>UnitOfWork(DbContext dbContext) : base(dbContext)
+        {
         }
+
+		#endregion
 
         #region porperties
 
 <#
     foreach (var set in efHost.EntityContainer.BaseEntitySets.OfType<EntitySet>())
     {
+	    var fieldName = "_"+set.ElementType.Name[0].ToString(CultureInfo.InvariantCulture).ToLower() + set.ElementType.Name.Substring(1, set.ElementType.Name.Length - 1)+"Repository";
 #>
 		/// <summary>
-        /// <#= set.ElementType.Name #>
+        /// <#= set.ElementType.Name #>Entity
         /// </summary>
-        public EFRepository<<#= set.ElementType.Name #>Entity, int> <#= set.ElementType.Name #>Repository { get; protected set; }
+        public EFRepository<<#= set.ElementType.Name #>Entity, int> <#= set.ElementType.Name #>Repository { get { return <#=fieldName #> ?? ( <#=fieldName #> = new EFRepository<<#= set.ElementType.Name #>Entity, int>(DbContext)); } }
 
 <#
     }

@@ -34,7 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,7 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Auth\AuthenticationService.cs" />
+    <Compile Include="Auth\IAuthenticationService.cs" />
+    <Compile Include="Binder\BrandModelBinder.cs" />
+    <Compile Include="Binder\PagerRequestBinder.cs" />
+    <Compile Include="Configs\Class1.cs" />
+    <Compile Include="Ioc\BaseIocRegister.cs" />
+    <Compile Include="Ioc\ImportantSupportIocRegister.cs" />
+    <Compile Include="Ioc\IIocRegister.cs" />
+    <Compile Include="Ioc\IocRegisterRun.cs" />
+    <Compile Include="Models\WebSiteUser.cs" />
+    <Compile Include="Mvc\Controllers\UserController.cs" />
+    <Compile Include="Mvc\Filters\LoginAuthorizeAttribute.cs" />
+    <Compile Include="Mvc\Filters\ModelOwnerCheckFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -50,7 +65,16 @@
       <Project>{ac5ac3e2-09f3-4682-ab40-7a70bc4430c1}</Project>
       <Name>NGnono.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NGnono.FMNote.Datas\NGnono.FMNote.Datas.csproj">
+      <Project>{29de785b-72e3-41ae-b71b-8e73e19fe2aa}</Project>
+      <Name>NGnono.FMNote.Datas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NGnono.FMNote.Repository\NGnono.FMNote.Repository.csproj">
+      <Project>{03a71e0d-50c4-4212-bd7b-76f22185164d}</Project>
+      <Name>NGnono.FMNote.Repository</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
