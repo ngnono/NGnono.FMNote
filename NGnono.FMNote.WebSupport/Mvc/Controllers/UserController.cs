@@ -17,12 +17,12 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
 
         protected void SetAuthorize(WebSiteUser webSiteUser)
         {
-            AuthenticationService.SetAuthorize(HttpContext, webSiteUser);
+            AuthenticationService.SetAuthorize(base.HttpContext, webSiteUser);
         }
 
         protected void Signout()
         {
-            AuthenticationService.Signout(HttpContext);
+            AuthenticationService.Signout(base.HttpContext);
         }
 
         /// <summary>
@@ -40,15 +40,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
         /// </summary>
         public WebSiteUser CurrentUser
         {
-            get { return _currentUser ?? (_currentUser = AuthenticationService.GetCurrentUser(HttpContext)); }
-            /*get
-            {
-                if (HttpContext.Items["_CurrentUser_"]==null)
-                {
-                    HttpContext.Items["_CurrentUser_"] = AuthenticationService.GetCurrentUser(this.HttpContext);
-                }
-                return HttpContext.Items["_CurrentUser_"] as User;
-            }*/
+            get { return _currentUser ?? (_currentUser = AuthenticationService.GetCurrentUser(base.HttpContext)); }
         }
 
 
@@ -91,26 +83,26 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
         /// <summary>
         /// 禁止直接使用HttpContext
         /// </summary>
-        //[Obsolete]
-        //public new HttpContextBase HttpContext
-        //{
-        //    get
-        //    {
-        //        throw new NotSupportedException("禁止直接使用HttpContext");
-        //    }
-        //}
+        [Obsolete]
+        public new HttpContextBase HttpContext
+        {
+            get
+            {
+                throw new NotSupportedException("禁止直接使用HttpContext");
+            }
+        }
 
-        ///// <summary>
-        ///// 禁止直接使用 ControllerContext.
-        ///// </summary>
-        ////[Obsolete]
-        //public new ControllerContext ControllerContext
-        //{
-        //    get
-        //    {
-        //        throw new NotSupportedException("禁止直接使用ControllerContext");
-        //    }
-        //}
+        /// <summary>
+        /// 禁止直接使用 ControllerContext.
+        /// </summary>
+        [Obsolete]
+        public new ControllerContext ControllerContext
+        {
+            get
+            {
+                throw new NotSupportedException("禁止直接使用ControllerContext");
+            }
+        }
 
         /// <summary>
         /// 根据Ajax请求切换对应视图
@@ -167,6 +159,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
 
             return View("Success");
         }
+
         protected JsonResult SuccessResponse()
         {
             return Json(new
@@ -174,6 +167,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
                 Success = true
             });
         }
+
         protected JsonResult FailResponse()
         {
             return Json(new
@@ -181,6 +175,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
                 Success = false
             });
         }
+
         public bool HasRightForCurrentAction()
         {
             var action = RouteData.Values["action"];
@@ -189,12 +184,14 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
                 actionName = action.ToString();
             return HasRightForAction(actionName);
         }
+
         public bool HasRightForAction(string actionName)
         {
             string controllName = RouteData.Values["controller"].ToString();
             return HasRightForAction(controllName, actionName);
 
         }
+
         public bool HasRightForAction(string controller, string actionName)
         {
 
@@ -228,6 +225,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
             //return result != null;
 
         }
+
         [HttpGet]
         public virtual JsonResult AutoComplete(string name)
         {

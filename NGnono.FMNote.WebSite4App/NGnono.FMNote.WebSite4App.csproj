@@ -283,12 +283,22 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Bill\Create.cshtml" />
+    <Content Include="Views\Bill\Delete.cshtml" />
+    <Content Include="Views\Bill\Details.cshtml" />
+    <Content Include="Views\Bill\Edit.cshtml" />
+    <Content Include="Views\Bill\List.cshtml" />
+    <Content Include="Views\Bill\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NGnono.FMNote.Datas\NGnono.FMNote.Datas.csproj">
+      <Project>{29de785b-72e3-41ae-b71b-8e73e19fe2aa}</Project>
+      <Name>NGnono.FMNote.Datas</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NGnono.FMNote.WebSite4App.Core\NGnono.FMNote.WebSite4App.Core.csproj">
       <Project>{a00e7b4e-084e-4537-9a6a-1265734b1580}</Project>
       <Name>NGnono.FMNote.WebSite4App.Core</Name>
