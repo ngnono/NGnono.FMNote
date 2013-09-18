@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Auth\AuthenticationService.cs" />
     <Compile Include="Auth\IAuthenticationService.cs" />
-    <Compile Include="Binder\BrandModelBinder.cs" />
+    <Compile Include="Binder\EntitiesModelBinder.cs" />
     <Compile Include="Binder\PagerRequestBinder.cs" />
     <Compile Include="Configs\Class1.cs" />
     <Compile Include="Ioc\BaseIocRegister.cs" />

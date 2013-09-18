@@ -19,7 +19,7 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .IsRequired()
                 .HasMaxLength(512);
 
-            this.Property(t => t.Nickname)
+            this.Property(t => t.Petname)
                 .IsRequired()
                 .HasMaxLength(128);
 
@@ -43,7 +43,7 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.Name).HasColumnName("Name");
             this.Property(t => t.Password).HasColumnName("Password");
-            this.Property(t => t.Nickname).HasColumnName("Nickname");
+            this.Property(t => t.Petname).HasColumnName("Petname");
             this.Property(t => t.CreatedUser).HasColumnName("CreatedUser");
             this.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             this.Property(t => t.UpdatedUser).HasColumnName("UpdatedUser");

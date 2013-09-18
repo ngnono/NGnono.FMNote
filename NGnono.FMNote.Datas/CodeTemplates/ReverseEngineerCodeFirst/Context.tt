@@ -183,4 +183,60 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
     }
 
 	#endregion
+
+
+	#region mvc modelbinder
+
+<#
+    foreach (var set in efHost.EntityContainer.BaseEntitySets.OfType<EntitySet>())
+    {
+	    var classPreName = set.ElementType.Name;
+		var entityName = classPreName + "Entity";
+		var titleClassName = "_" + classPreName.ToString(CultureInfo.InvariantCulture).ToLower() + classPreName.Substring(1, classPreName.Length - 1);
+#>
+    #region <#= classPreName #>ModelBinder
+    
+	public class <#= classPreName #>ModelBinder : ModelBinderBase
+    {
+        private readonly IRepository<<#= entityName #>, int> <#= titleClassName #>;
+
+        public <#= classPreName #>ModelBinder(IRepository<<#= entityName #>, int> service)
+        {
+            <#= titleClassName #> = service;
+        }
+
+        #region Overrides of ModelBinderBase
+
+        /// <summary>
+        /// 根据模型标识获取模型实例
+        /// </summary>
+        /// <param name="modelId">
+        /// 模型标识
+        /// </param>
+        /// <returns>
+        /// 模型实例
+        /// </returns>
+        protected override object GetModelInstance(string modelId)
+        {
+            return <#= titleClassName #>.GetItem(Int32.Parse(modelId));
+        }
+
+        #endregion
+    }
+
+    public class Fetch<#= classPreName #>Attribute : UseBinderAttribute
+    {
+        public Fetch<#= classPreName #>Attribute()
+            : base(typeof(<#= classPreName #>ModelBinder))
+        {
+        }
+    }
+
+	#endregion
+
+<#
+    }
+#>
+
+	#endregion
 }

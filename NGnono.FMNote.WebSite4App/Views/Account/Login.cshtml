@@ -1,7 +1,8 @@
-﻿@model NGnono.FMNote.WebSite4App.Core.Models.LoginModel
+﻿@model NGnono.FMNote.WebSite4App.Core.Models.VO.LoginVO
 
 @{
     ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Header {
@@ -31,16 +32,11 @@
         </li>
 
         <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.RememberMe)
-            @Html.CheckBoxFor(m => m.RememberMe)
-        </li>
-
-        <li data-role="fieldcontain">
             <input type="submit" value="Log in" />
         </li>
     </ul>
 }
 
-@section Scripts {
+@section FooterScripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
