@@ -22,8 +22,8 @@
         </li>
         
         <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.Petname)
-            @Html.TextBoxFor(m => m.Petname)            
+            @Html.LabelFor(m => m.ScreenName)
+            @Html.TextBoxFor(m => m.ScreenName)            
         </li>
 
         <li data-role="fieldcontain">
@@ -47,6 +47,6 @@
     </ul>
 }
 
-@section Scripts {
+@section FooterScripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

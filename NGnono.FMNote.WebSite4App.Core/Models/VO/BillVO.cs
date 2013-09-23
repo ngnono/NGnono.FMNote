@@ -17,14 +17,26 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.VO
         [Required]
         public int Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Display(Name = "金额")]
         [Required]
         public decimal Amount { get; set; }
+
+        [Display(Name = "模式")]
+        [Required]
         public int Mode { get; set; }
         // ReSharper disable InconsistentNaming
         public int User_Id { get; set; }
         public int Category_Id { get; set; }
         // ReSharper restore InconsistentNaming
+
+        [Display(Name = "模式")]
+        [Required]
         public int Type { get; set; }
+
+        [Display(Name = "模式")]
         public string Description { get; set; }
         public System.DateTime DataDateTime { get; set; }
         public System.DateTime CreatedDate { get; set; }
@@ -42,9 +54,11 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.VO
 
     }
 
+
+
+
     public class CategoryVO : BaseVO
     {
-
     }
 
     public class UserVO : BaseVO

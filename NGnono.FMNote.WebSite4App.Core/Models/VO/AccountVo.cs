@@ -29,9 +29,9 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.VO
         [Display(Name = "用户名")]
         public string UserName { get; set; }
 
-        [StringLength(32, MinimumLength = 6)]
+        [StringLength(32, MinimumLength = 1)]
         [Display(Name = "昵称")]
-        public string Petname { get; set; }
+        public string ScreenName { get; set; }
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "电子邮件地址")]
@@ -73,7 +73,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.VO
     {
         [StringLength(32, MinimumLength = 6)]
         [Display(Name = "昵称")]
-        public string Petname { get; set; }
+        public string ScreenName { get; set; }
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "电子邮件地址")]

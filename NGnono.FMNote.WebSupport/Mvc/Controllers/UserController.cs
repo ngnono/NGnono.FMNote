@@ -1,4 +1,5 @@
-﻿using NGnono.FMNote.WebSupport.Auth;
+﻿using NGnono.FMNote.Repository;
+using NGnono.FMNote.WebSupport.Auth;
 using NGnono.FMNote.WebSupport.Models;
 using NGnono.Framework.ServiceLocation;
 using NGnono.Framework.Web.Mvc.Controllers;
@@ -10,10 +11,25 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
 {
     public abstract class UserController : BaseController
     {
+        #region fields
+
+        private IFMNoteEFUnitOfWork _unitOfWork;
+
+        #endregion
+
         protected UserController()
         {
             AuthenticationService = ServiceLocator.Current.Resolve<IAuthenticationService>();
         }
+
+        #region properties
+
+        protected IFMNoteEFUnitOfWork UnitOfWork
+        {
+            get { return _unitOfWork ?? (_unitOfWork = GetService<IFMNoteEFUnitOfWork>()); }
+        }
+
+        #endregion
 
         protected void SetAuthorize(WebSiteUser webSiteUser)
         {
@@ -42,7 +58,6 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
         {
             get { return _currentUser ?? (_currentUser = AuthenticationService.GetCurrentUser(base.HttpContext)); }
         }
-
 
         /// <summary>
         /// 禁用 Response

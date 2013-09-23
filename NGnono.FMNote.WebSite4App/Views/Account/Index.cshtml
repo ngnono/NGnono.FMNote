@@ -1,7 +1,8 @@
-﻿@model NGnono.FMNote.WebSite4App.Core.Models.LoginModel
+﻿@model NGnono.FMNote.WebSite4App.Core.Models.DTO.Account.IndexDTO
 
 @{
-    ViewBag.Title = "Your Account";
+    ViewBag.Title = String.Format("{0} Account", Model.ShowName);
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Header {
@@ -10,7 +11,7 @@
 }
 
 <p>
-    Logged in as <strong>@User.Identity.Name</strong>.
+    Logged in as <strong>@this.Model.ShowName</strong>.
 </p>
 
 <ul data-role="listview" data-inset="true">

@@ -1,28 +1,91 @@
 ﻿using NGnono.FMNote.Datas.Models;
-using NGnono.FMNote.Repository;
+using NGnono.FMNote.Models.Enums;
+using NGnono.FMNote.WebSite4App.Core.Models.DTO.Account;
 using NGnono.FMNote.WebSite4App.Core.Models.VO;
 using NGnono.FMNote.WebSupport.Models;
 using NGnono.FMNote.WebSupport.Mvc.Controllers;
 using NGnono.FMNote.WebSupport.Mvc.Filters;
+using NGnono.Framework.Security.Cryptography;
 using System;
-using System.Web.Mvc;
+using System.Globalization;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace NGnono.FMNote.WebSite4App.Core.Controllers
 {
     public class AccountController : UserController
     {
-        private IFMNoteEFUnitOfWork _unitOfWork;
+        #region .ctor
 
-        public AccountController(IFMNoteEFUnitOfWork efUnitOfWork)
+        public AccountController()
         {
-            _unitOfWork = efUnitOfWork;
         }
+
+        #endregion
+
+        #region methods
+
+        private UserEntity CheckUser(string userName, string password)
+        {
+            using (UnitOfWork)
+            {
+                var userEntity = UnitOfWork.UserRepository.Get(v =>
+                            String.Compare(v.Name, userName, StringComparison.OrdinalIgnoreCase) == 0).FirstOrDefault();
+
+                if (userEntity == null)
+                {
+                    return null;
+                }
+
+                return PwdSecurityHelper.CheckEqual(password, userEntity.Password) ? userEntity : null;
+            }
+        }
+
+        private string SetPassword(int userId, string newPwd, string oldPwd)
+        {
+            using (UnitOfWork)
+            {
+                var userEntity = UnitOfWork.UserRepository.Get(v => v.Id == userId).FirstOrDefault();
+                if (userEntity == null)
+                {
+                    return "用户未找到";
+                }
+
+                if (PwdSecurityHelper.CheckEqual(oldPwd, userEntity.Password))
+                {
+                    userEntity.Password = PwdSecurityHelper.ComputeHash(newPwd);
+                    userEntity.UpdatedDate = DateTime.Now;
+                }
+                else
+                {
+                    return "原密码错";
+                }
+
+                UnitOfWork.UserRepository.Update(userEntity);
+            }
+
+            return null;
+        }
+
+        private UserEntity InsertUser(UserEntity user)
+        {
+            using (UnitOfWork)
+            {
+                user.Password = PwdSecurityHelper.ComputeHash(user.Password);
+                var userEntity = UnitOfWork.UserRepository.Insert(user);
+
+                return userEntity;
+            }
+        }
+
+        #endregion
 
         [LoginAuthorize]
         public ActionResult Index()
         {
-            return View();
+            var vo = new IndexDTO { ShowName = CurrentUser.ShowName };
+
+            return View(vo);
         }
 
         public ActionResult Login(string returnUrl)
@@ -32,19 +95,12 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
             return View(new LoginVO());
         }
 
-        ////
-        //// POST: /Account/Login
-
         [HttpPost]
         public ActionResult Login(FormCollection formCollection, LoginVO model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                var userModel =
-                    _unitOfWork.UserRepository.Get(
-                        v =>
-                        String.Compare(v.Name, model.UserName, System.StringComparison.OrdinalIgnoreCase) == 0 &&
-                        String.CompareOrdinal(v.Password, model.Password) == 0).FirstOrDefault();
+                var userModel = CheckUser(model.UserName, model.Password);
 
                 if (userModel == null)
                 {
@@ -53,7 +109,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
                 else
                 {
                     //写认证
-                    SetAuthorize(new WebSiteUser(userModel.Name, userModel.Id, userModel.Petname));
+                    SetAuthorize(new WebSiteUser(userModel.Name, userModel.Id, userModel.ScreenName));
 
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                 && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -75,9 +131,9 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         ////
         //// POST: /Account/LogOff
 
-        public ActionResult LogOut()
+        public ActionResult LogOff()
         {
-            base.Signout();
+            Signout();
 
             return RedirectToAction("Index", "Home");
         }
@@ -94,12 +150,15 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_userService.SetPassword(CurrentUser.CustomerId, viewModel.OldPassword, viewModel.NewPassword))
+                var msg = SetPassword(CurrentUser.CustomerId, viewModel.NewPassword, viewModel.OldPassword);
+
+
+                if (String.IsNullOrEmpty(msg))
                 {
                     return View("ChangePasswordSuccess");
                 }
 
-                ModelState.AddModelError("", "OldPassword 错误.");
+                ModelState.AddModelError("", msg);
             }
             else
             {
@@ -123,25 +182,30 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userEntity = new UserEntity();
-                userEntity.CreatedDate = DateTime.Now;
-                userEntity.UpdatedDate = DateTime.Now;
-                userEntity.Description = String.Empty;
-                userEntity.EMail = viewModel.Email;
-                userEntity.Gender = 0;
-                userEntity.LastLoginDate = DateTime.Now;
-                userEntity.Logo = String.Empty;
-                userEntity.Mobile = String.Empty;
-                userEntity.Name = viewModel.UserName;
-                userEntity.Password = viewModel.Password;
-                userEntity.Petname = viewModel.Nickname;
-                userEntity.Status = (int)DataStatus.Normal;
-                userEntity.UserLevel = (int)UserLevel.User;
+                var tempUserEntity = new UserEntity
+                    {
+                        Status = (int)DataStatus.Normal,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now,
+                        //CreatedUser = CurrentUser.CustomerId,
+                        //UpdatedUser = CurrentUser.CustomerId,
+                        Description = String.Empty,
+                        EMail = viewModel.Email,
+                        Gender = 0,
+                        LastLoginDate = DateTime.Now,
+                        Logo = String.Empty,
+                        Mobile = String.Empty,
+                        Name = viewModel.UserName,
+                        Password = viewModel.Password,
+                        ScreenName = viewModel.ScreenName,
 
-                var e = _customerRepository.Insert(userEntity);
+                        UserLevel = (int)UserLevel.User
+                    };
+
+                var userEntity = InsertUser(tempUserEntity);
 
                 //写认证
-                SetAuthorize(new WebSiteUser(e.Name, e.Id, e.Nickname, UserRole.User));
+                SetAuthorize(new WebSiteUser(userEntity.Name, userEntity.Id, userEntity.ScreenName));
 
                 if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
             && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -151,10 +215,8 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
                 return RedirectToAction("Index");
             }
-            else
-            {
-                ModelState.AddModelError("", "验证错误.");
-            }
+
+            ModelState.AddModelError("", "验证错误.");
 
             return View(viewModel);
         }

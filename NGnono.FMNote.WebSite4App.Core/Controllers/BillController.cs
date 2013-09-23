@@ -1,18 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using NGnono.FMNote.Datas.Models;
+using NGnono.FMNote.Models.Enums;
+using NGnono.FMNote.WebSite4App.Core.Models.DTO.Bill;
+using NGnono.FMNote.WebSite4App.Core.Models.VO;
 using NGnono.FMNote.WebSupport.Binder;
 using NGnono.FMNote.WebSupport.Mvc.Controllers;
 using NGnono.FMNote.WebSupport.Mvc.Filters;
+using NGnono.Framework.Data.EF;
+using NGnono.Framework.Mapping;
+using NGnono.Framework.Models;
 
 namespace NGnono.FMNote.WebSite4App.Core.Controllers
 {
     public class BillController : UserController
     {
+        #region methods
+
+        private BillEntity Insert(BillEntity entity)
+        {
+            using (UnitOfWork)
+            {
+                var bill = UnitOfWork.BillRepository.Insert(entity);
+
+                return bill;
+            }
+        }
+
+        /// <summary>
+        /// 逻辑删
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="updateUserId"></param>
+        /// <returns></returns>
+        private bool Del(BillEntity entity, int updateUserId)
+        {
+            using (UnitOfWork)
+            {
+                entity.IsDeleted = true;
+                entity.UpdatedDate = DateTime.Now;
+                entity.UpdatedUser = updateUserId;
+
+                UnitOfWork.BillRepository.Update(entity);
+
+                return true;
+            }
+        }
+
+        private BillEntity Update(BillEntity entity)
+        {
+            using (UnitOfWork)
+            {
+                UnitOfWork.BillRepository.Update(entity);
+            }
+
+            return entity;
+        }
+
+        private IQueryable<BillEntity> GetList(PagerRequest pagerRequest, out int totalCount, BillFilterOptions filterOptions, BillSortOptions sortOptions)
+        {
+            using (UnitOfWork)
+            {
+                return UnitOfWork.BillRepository.Get(Filler(filterOptions), out totalCount, pagerRequest.PageIndex,
+                                              pagerRequest.PageSize, OrderBy(sortOptions));
+            }
+        }
+
+        private static Expression<Func<BillEntity, bool>> Filler(BillFilterOptions filterOptions)
+        {
+            var filter = PredicateBuilder.True<BillEntity>();
+
+            if (filterOptions.UserId != null)
+            {
+                filter.And(v => v.User_Id == filterOptions.UserId);
+            }
+
+            if (filterOptions.DataStatus != null)
+            {
+                filter.And(v => v.Status == (int)filterOptions.DataStatus.Value);
+            }
+
+            return filter;
+        }
+
+        private static Func<IQueryable<BillEntity>, IOrderedQueryable<BillEntity>> OrderBy(BillSortOptions sortOptions)
+        {
+            Func<IQueryable<BillEntity>, IOrderedQueryable<BillEntity>> orderBy = null;
+
+            switch (sortOptions)
+            {
+                default:
+                    orderBy = v => v.OrderByDescending(s => s.CreatedDate);
+                    break;
+            }
+
+            return orderBy;
+        }
+
+        #endregion
+
+
         [HttpGet]
         public ActionResult Index()
         {
@@ -28,9 +120,33 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         [HttpPost]
         [LoginAuthorize]
-        public ActionResult Create(FormCollection formCollection)
+        public ActionResult Create(FormCollection formCollection, BillVO vo)
         {
-            return View();
+            var jsonResult = new JsonResult { ContentEncoding = Encoding.UTF8 };
+
+            var result = new ExecuteResult<int>();
+
+            if (ModelState.IsValid)
+            {
+                var billEntity = Mapper.Map<BillVO, BillEntity>(vo);
+                billEntity.CreatedDate = DateTime.Now;
+                billEntity.CreatedUser = CurrentUser.CustomerId;
+                billEntity.UpdatedDate = DateTime.Now;
+                billEntity.UpdatedUser = CurrentUser.CustomerId;
+                billEntity.Status = (int)DataStatus.Normal;
+
+                var entity = Insert(billEntity);
+
+                result.Data = entity.Id;
+            }
+            else
+            {
+                result.StatusCode = StatusCode.ClientError;
+            }
+
+            jsonResult.Data = result;
+
+            return jsonResult;
         }
 
         [HttpGet]
@@ -42,23 +158,41 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         [LoginAuthorize]
         [HttpPost]
+        [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
         public ActionResult Delete(FormCollection formCollection, [FetchBill(KeyName = "billid")]BillEntity model)
         {
-            return View();
+            Del(model, CurrentUser.CustomerId);
+
+            var jsonResult = new JsonResult { ContentEncoding = Encoding.UTF8 };
+
+            var result = new ExecuteResult<int>();
+
+            jsonResult.Data = result;
+
+            return jsonResult;
         }
 
         [HttpGet]
         [LoginAuthorize]
-        public ActionResult List()
+        public ActionResult List(PagerRequest pagerRequest, BillFilterOptions filterOptions, BillSortOptions? sortOptions)
         {
-            return View();
+            int totalCount;
+
+            var queryTable = GetList(pagerRequest, out totalCount, filterOptions, sortOptions ?? BillSortOptions.Default);
+
+            var dto = new ListDTO { Bills = new PagerInfo<BillEntity>(pagerRequest, totalCount, queryTable) };
+
+            return View(dto);
         }
 
         [HttpGet]
+        [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
         [LoginAuthorize]
-        public ActionResult Details()
+        public ActionResult Details([FetchBill(KeyName = "billid")]BillEntity model)
         {
-            return View();
+            //var vo = Mapper.Map<BillEntity, BillVO>(model);
+
+            return View(model);
         }
 
         [LoginAuthorize]
@@ -66,15 +200,42 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         [HttpGet]
         public ActionResult Edit([FetchBill(KeyName = "billid")]BillEntity model)
         {
-            return View();
+            return View(model);
         }
 
         [LoginAuthorize]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
         [HttpPost]
-        public ActionResult Edit(FormCollection formCollection, [FetchBill(KeyName = "billid")]BillEntity model)
+        public ActionResult Edit(FormCollection formCollection, [FetchBill(KeyName = "billid")]BillEntity model, BillVO vo)
         {
-            return View();
+            var jsonResult = new JsonResult { ContentEncoding = Encoding.UTF8 };
+
+            var result = new ExecuteResult<int>();
+
+            if (ModelState.IsValid)
+            {
+                var tmp = Mapper.Map<BillVO, BillEntity>(vo);
+                tmp.UpdatedDate = DateTime.Now;
+                tmp.UpdatedUser = CurrentUser.CustomerId;
+                tmp.Status = model.Status;
+                tmp.CreatedDate = model.CreatedDate;
+                tmp.CreatedUser = model.CreatedUser;
+                tmp.Status = model.Status;
+                tmp.IsDeleted = model.IsDeleted;
+
+                Mapper.Map(tmp, model);
+
+                Update(model);
+            }
+            else
+            {
+                result.StatusCode = StatusCode.ClientError;
+                result.Message = "参数验证错误";
+            }
+
+            jsonResult.Data = result;
+
+            return jsonResult;
         }
     }
 }

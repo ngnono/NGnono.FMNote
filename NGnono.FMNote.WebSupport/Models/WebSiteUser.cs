@@ -3,7 +3,7 @@
 namespace NGnono.FMNote.WebSupport.Models
 {
     /// <summary>
-    /// 网站用户
+    ///     网站用户
     /// </summary>
     [Serializable]
     public class WebSiteUser
@@ -13,41 +13,37 @@ namespace NGnono.FMNote.WebSupport.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebSiteUser"/> class.
+        ///     Initializes a new instance of the <see cref="WebSiteUser" /> class.
         /// </summary>
         /// <param name="loginName">
-        /// The login name.
+        ///     The login name.
         /// </param>
         /// <param name="customerId">
-        /// The customer id.
+        ///     The customer id.
         /// </param>
         /// <param name="nickName">昵称</param>
         public WebSiteUser(string loginName, int customerId, string nickName)
         {
-            this.LoginName = loginName;
-            this.CustomerId = customerId;
-            this.NickName = nickName;
+            LoginName = loginName;
+            CustomerId = customerId;
+            ScreenName = nickName;
         }
 
         /// <summary>
-        /// Gets LoginName.
+        ///     Gets LoginName.
         /// </summary>
         public string LoginName { get; set; }
 
         /// <summary>
-        /// Gets CustomerId.
+        ///     Gets CustomerId.
         /// </summary>
         public int CustomerId { get; set; }
 
-        public string NickName { get; set; }
+        public string ScreenName { get; set; }
 
         public string ShowName
         {
-            get
-            {
-                return String.IsNullOrWhiteSpace(NickName) ? LoginName : NickName;
-            }
-            set { }
+            get { return String.IsNullOrWhiteSpace(ScreenName) ? LoginName : ScreenName; }
         }
     }
 }

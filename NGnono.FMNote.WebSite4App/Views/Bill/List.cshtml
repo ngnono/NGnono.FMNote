@@ -1,8 +1,9 @@
-﻿@model IEnumerable<NGnono.FMNote.Datas.Models.BillEntity>
+﻿@model NGnono.FMNote.WebSite4App.Core.Models.DTO.Bill.ListDTO
 
 @{
     ViewBag.Title = "List";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var listModel = Model.Bills;
 }
 
 <h2>List</h2>
@@ -13,54 +14,55 @@
 <table>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Amount)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().Amount)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Mode)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().Mode)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.User_Id)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().User_Id)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Category_Id)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().Category_Id)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Type)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().Type)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DataDateTime)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().DataDateTime)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().CreatedDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.UpdatedDate)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().UpdatedDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreatedUser)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().CreatedUser)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.UpdatedUser)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().UpdatedUser)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().Status)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IsDeleted)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().IsDeleted)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ExtendedContentType)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().ExtendedContentType)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ExtendedContent)
+            @Html.DisplayNameFor(model => model.Bills.FirstOrDefault().ExtendedContent)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in listModel)
+{
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Amount)

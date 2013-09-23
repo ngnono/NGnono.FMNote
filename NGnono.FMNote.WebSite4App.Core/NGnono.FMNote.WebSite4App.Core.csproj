@@ -111,10 +111,11 @@
     <Compile Include="Controllers\BillController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Models\BaseDTO.cs" />
+    <Compile Include="Models\DTO\Account\IndexDTO.cs" />
     <Compile Include="Models\DTO\Bill\DetailDTO.cs" />
     <Compile Include="Models\BaseVO.cs" />
     <Compile Include="Models\VO\BillVO.cs" />
-    <Compile Include="Models\VO\LoginVo.cs" />
+    <Compile Include="Models\VO\AccountVo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApplication.cs" />
   </ItemGroup>
@@ -131,6 +132,10 @@
     <ProjectReference Include="..\NGnono.FMNote.Datas\NGnono.FMNote.Datas.csproj">
       <Project>{29de785b-72e3-41ae-b71b-8e73e19fe2aa}</Project>
       <Name>NGnono.FMNote.Datas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NGnono.FMNote.Models\NGnono.FMNote.Models.csproj">
+      <Project>{b6d468f6-f235-4825-9209-9fda0ef2abca}</Project>
+      <Name>NGnono.FMNote.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\NGnono.FMNote.Repository\NGnono.FMNote.Repository.csproj">
       <Project>{03a71e0d-50c4-4212-bd7b-76f22185164d}</Project>

@@ -12,6 +12,7 @@ using System.Data.Objects;
 using EFTracingProvider;
 using EFProviderWrapperToolkit;
 using NGnono.Framework.Data.EF;
+using NGnono.Framework.Logger;
 using <#= code.EscapeNamespace(efHost.MappingNamespace) #>;
 
 namespace <#= code.EscapeNamespace(efHost.Namespace) #>
@@ -23,7 +24,7 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
         static <#= efHost.EntityContainer.Name #>()
         {
             Database.SetInitializer<<#= efHost.EntityContainer.Name #>>(null);
-			_log = NGnono.Framework.ServiceLocation.ServiceLocator.Current.Resolve<NGnono.Framework.Logger.ILog>();
+			_log = LoggerManager.Current();
         }
 
 		/// <summary>
