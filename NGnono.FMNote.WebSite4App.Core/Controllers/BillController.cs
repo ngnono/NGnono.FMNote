@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using NGnono.FMNote.Datas.Models;
 using NGnono.FMNote.Models.Enums;
+using NGnono.FMNote.Repository;
 using NGnono.FMNote.WebSite4App.Core.Models.DTO.Bill;
-using NGnono.FMNote.WebSite4App.Core.Models.VO;
+using NGnono.FMNote.WebSite4App.Core.Models.ViewModel;
 using NGnono.FMNote.WebSupport.Binder;
 using NGnono.FMNote.WebSupport.Mvc.Controllers;
 using NGnono.FMNote.WebSupport.Mvc.Filters;
@@ -24,12 +25,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         private BillEntity Insert(BillEntity entity)
         {
-            using (UnitOfWork)
-            {
-                var bill = UnitOfWork.BillRepository.Insert(entity);
-
-                return bill;
-            }
+            return ServiceInvoke(unitOfWork => unitOfWork.BillRepository.Insert(entity));
         }
 
         /// <summary>
@@ -40,35 +36,36 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         /// <returns></returns>
         private bool Del(BillEntity entity, int updateUserId)
         {
-            using (UnitOfWork)
-            {
-                entity.IsDeleted = true;
-                entity.UpdatedDate = DateTime.Now;
-                entity.UpdatedUser = updateUserId;
+            return ServiceInvoke<bool>(service =>
+                {
+                    entity.IsDeleted = true;
+                    entity.UpdatedDate = DateTime.Now;
+                    entity.UpdatedUser = updateUserId;
 
-                UnitOfWork.BillRepository.Update(entity);
+                    service.BillRepository.Update(entity);
 
-                return true;
-            }
+                    return true;
+                });
         }
 
         private BillEntity Update(BillEntity entity)
         {
-            using (UnitOfWork)
-            {
-                UnitOfWork.BillRepository.Update(entity);
-            }
+
+            ServiceInvoke<IFMNoteEFUnitOfWork>(s => s.BillRepository.Update(entity));
 
             return entity;
         }
 
-        private IQueryable<BillEntity> GetList(PagerRequest pagerRequest, out int totalCount, BillFilterOptions filterOptions, BillSortOptions sortOptions)
+        private IEnumerable<BillEntity> GetList(PagerRequest pagerRequest, out int totalCount, BillFilterOptions filterOptions, BillSortOptions sortOptions)
         {
-            using (UnitOfWork)
-            {
-                return UnitOfWork.BillRepository.Get(Filler(filterOptions), out totalCount, pagerRequest.PageIndex,
-                                              pagerRequest.PageSize, OrderBy(sortOptions));
-            }
+            var count = 0;
+
+            var t = ServiceInvoke(v => v.BillRepository.Get(Filler(filterOptions), out count, pagerRequest.PageIndex,
+                                                 pagerRequest.PageSize, OrderBy(sortOptions)));
+
+            totalCount = count;
+
+            return t;
         }
 
         private static Expression<Func<BillEntity, bool>> Filler(BillFilterOptions filterOptions)
@@ -120,7 +117,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         [HttpPost]
         [LoginAuthorize]
-        public ActionResult Create(FormCollection formCollection, BillVO vo)
+        public ActionResult Create(FormCollection formCollection, BillViewModel vo)
         {
             var jsonResult = new JsonResult { ContentEncoding = Encoding.UTF8 };
 
@@ -128,7 +125,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
             if (ModelState.IsValid)
             {
-                var billEntity = Mapper.Map<BillVO, BillEntity>(vo);
+                var billEntity = Mapper.Map<BillViewModel, BillEntity>(vo);
                 billEntity.CreatedDate = DateTime.Now;
                 billEntity.CreatedUser = CurrentUser.CustomerId;
                 billEntity.UpdatedDate = DateTime.Now;
@@ -151,9 +148,10 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         [HttpGet]
         [LoginAuthorize]
+        [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
         public ActionResult Delete([FetchBill(KeyName = "billid")] BillEntity model)
         {
-            return View();
+            return View(model);
         }
 
         [LoginAuthorize]
@@ -190,7 +188,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         [LoginAuthorize]
         public ActionResult Details([FetchBill(KeyName = "billid")]BillEntity model)
         {
-            //var vo = Mapper.Map<BillEntity, BillVO>(model);
+            //var vo = Mapper.Map<BillEntity, BillViewModel>(model);
 
             return View(model);
         }
@@ -206,7 +204,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         [LoginAuthorize]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
         [HttpPost]
-        public ActionResult Edit(FormCollection formCollection, [FetchBill(KeyName = "billid")]BillEntity model, BillVO vo)
+        public ActionResult Edit(FormCollection formCollection, [FetchBill(KeyName = "billid")]BillEntity model, BillViewModel vo)
         {
             var jsonResult = new JsonResult { ContentEncoding = Encoding.UTF8 };
 
@@ -214,7 +212,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
             if (ModelState.IsValid)
             {
-                var tmp = Mapper.Map<BillVO, BillEntity>(vo);
+                var tmp = Mapper.Map<BillViewModel, BillEntity>(vo);
                 tmp.UpdatedDate = DateTime.Now;
                 tmp.UpdatedUser = CurrentUser.CustomerId;
                 tmp.Status = model.Status;

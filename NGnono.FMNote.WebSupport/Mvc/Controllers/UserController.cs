@@ -1,9 +1,14 @@
-﻿using NGnono.FMNote.Repository;
+﻿using NGnono.FMNote.Datas.Models;
+using NGnono.FMNote.Repository;
 using NGnono.FMNote.WebSupport.Auth;
 using NGnono.FMNote.WebSupport.Models;
+using NGnono.Framework.Data.EF;
+using NGnono.Framework.Models;
 using NGnono.Framework.ServiceLocation;
 using NGnono.Framework.Web.Mvc.Controllers;
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,7 +18,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
     {
         #region fields
 
-        private IFMNoteEFUnitOfWork _unitOfWork;
+        private IFMNoteEFUnitOfWork _fmnoteUnitOfWork;
 
         #endregion
 
@@ -24,12 +29,211 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
 
         #region properties
 
-        protected IFMNoteEFUnitOfWork UnitOfWork
+        private IFMNoteEFUnitOfWork FMNoteUnitOfWork
         {
-            get { return _unitOfWork ?? (_unitOfWork = GetService<IFMNoteEFUnitOfWork>()); }
+            get { return _fmnoteUnitOfWork ?? (_fmnoteUnitOfWork = GetService<IFMNoteEFUnitOfWork>()); }
         }
 
         #endregion
+
+        #region methods
+
+        protected delegate IQueryable<TData> PagedListGetterHandler<TData>(IFMNoteEFUnitOfWork unitOfWork, Expression<Func<TData, bool>> filter, Func<IQueryable<TData>, IOrderedQueryable<TData>> orderby, PagerRequest pagerRequest, out int totalCount);
+
+        protected PagerInfo<TData> PagedListGetter<TData, TFilterOptions, TOrderbyOptions>(PagerRequest pagerRequest, TFilterOptions filterOptions,
+                                                          TOrderbyOptions orderbyOptions, PagedListGetterHandler<TData> getterHandler, Func<TFilterOptions, Expression<Func<TData, bool>>> filterConverter, Func<TOrderbyOptions, Func<IQueryable<TData>, IOrderedQueryable<TData>>> orderbyConverter)
+        {
+            int totalCount;
+            IQueryable<TData> datas;
+            using (FMNoteUnitOfWork)
+            {
+                datas = getterHandler(FMNoteUnitOfWork, filterConverter == null ? null : filterConverter(filterOptions), orderbyConverter == null ? null : orderbyConverter(orderbyOptions), pagerRequest, out totalCount);
+            }
+
+            return new PagerInfo<TData>(pagerRequest, totalCount, datas);
+        }
+
+
+
+        protected delegate IQueryable<TData> ListGetterHandler<TData>(
+            IFMNoteEFUnitOfWork unitOfWork, Expression<Func<TagEntity, bool>> filter,
+            Func<IQueryable<TData>, IOrderedQueryable<TData>> orderby);
+
+        protected IQueryable<TData> ListGetter<TData, TFilterOptions, TOrderbyOptions>(TFilterOptions filterOptions,
+                                                  TOrderbyOptions orderbyOptions, ListGetterHandler<TData> getterHandler, Func<TFilterOptions, Expression<Func<TagEntity, bool>>> filterConverter, Func<TOrderbyOptions, Func<IQueryable<TData>, IOrderedQueryable<TData>>> orderbyConverter)
+        {
+            IQueryable<TData> datas;
+            using (FMNoteUnitOfWork)
+            {
+                datas = getterHandler(FMNoteUnitOfWork, filterConverter == null ? null : filterConverter(filterOptions), orderbyConverter == null ? null : orderbyConverter(orderbyOptions));
+            }
+
+            return datas;
+        }
+
+        //protected delegate TData ItemSetterHandler<TData>(IFMNoteEFUnitOfWork unitOfWork, TData data);
+
+        //protected TData ItemSetter<TData>(TData data, ItemSetterHandler<TData> setterHandler)
+        //{
+        //    TData newData;
+        //    using (UnitOfWork)
+        //    {
+        //        newData = setterHandler(UnitOfWork, data);
+        //    }
+
+        //    return newData;
+        //}
+
+        protected TData ItemSetter<TData>(TData data, Func<IFMNoteEFUnitOfWork, TData, TData> func)
+        {
+            TData newData;
+            using (FMNoteUnitOfWork)
+            {
+                newData = func(FMNoteUnitOfWork, data);
+            }
+
+            return newData;
+        }
+
+        private static readonly string IfmNoteEFUnitOfWork = typeof(IFMNoteEFUnitOfWork).Name;
+
+        /// <summary>
+        /// 是否是
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static bool IsServiceDefined(Type type)
+        {
+            return true;
+
+            //if (type.Name.Equals(IfmNoteEFUnitOfWork))
+            //{
+            //    return true;
+            //}
+
+            //return false;
+        }
+
+
+        protected TOut ServiceInvoke<TUnitOfWork, TOut>(Func<TUnitOfWork, TOut> func)
+        {
+            if (IsServiceDefined(typeof(TUnitOfWork)))
+            {
+                var service = GetService<TUnitOfWork>();
+
+                return Invoke(true, service, func);
+            }
+
+            throw new ArgumentException("TUnitOfWork No pre-defined. ");
+        }
+
+        protected void ServiceInvoke<TUnitOfWork>(Action<TUnitOfWork> action)
+        {
+            if (IsServiceDefined(typeof(TUnitOfWork)))
+            {
+                var service = GetService<TUnitOfWork>();
+
+                Invoke(true, service, action);
+            }
+
+            throw new ArgumentException("TUnitOfWork No pre-defined. ");
+        }
+
+        protected bool ServiceInvoke<TUnitOfWork>(Predicate<TUnitOfWork> predicate)
+        {
+            if (IsServiceDefined(typeof(TUnitOfWork)))
+            {
+                var service = GetService<TUnitOfWork>();
+
+                return Invoke(true, service, predicate);
+            }
+
+            throw new ArgumentException("TUnitOfWork No pre-defined. ");
+        }
+
+        private static TOut Invoke<TIn, TOut>(bool autoDisposed, TIn service, Func<TIn, TOut> func)
+        {
+            if (autoDisposed)
+            {
+                var disposable = service as IDisposable;
+                if (disposable != null)
+                {
+                    using (disposable)
+                    {
+                        return func(service);
+                    }
+                }
+
+                throw new ArgumentException("service is not implement IDisposable");
+            }
+
+            return func(service);
+        }
+
+        private static void Invoke<TIn>(bool autoDisposed, TIn service, Action<TIn> action)
+        {
+            if (autoDisposed)
+            {
+                var disposable = service as IDisposable;
+                if (disposable != null)
+                {
+                    using (disposable)
+                    {
+                        action(service);
+                    }
+                }
+
+                throw new ArgumentException("service is not implement IDisposable");
+            }
+
+            action(service);
+        }
+
+        private static bool Invoke<TIn>(bool autoDisposed, TIn service, Predicate<TIn> predicate)
+        {
+            if (autoDisposed)
+            {
+                var disposable = service as IDisposable;
+                if (disposable != null)
+                {
+                    using (disposable)
+                    {
+                        return predicate(service);
+                    }
+                }
+
+                throw new ArgumentException("service is not implement IDisposable");
+            }
+
+            return predicate(service);
+        }
+
+        protected T ServiceInvoke<T>(Func<IFMNoteEFUnitOfWork, T> func)
+        {
+            using (FMNoteUnitOfWork)
+            {
+                return func(FMNoteUnitOfWork);
+            }
+        }
+
+        protected void ServiceInvoke(Action<IFMNoteEFUnitOfWork> action)
+        {
+            using (FMNoteUnitOfWork)
+            {
+                action(FMNoteUnitOfWork);
+            }
+        }
+
+        protected bool ServiceInvoke(Predicate<IFMNoteEFUnitOfWork> predicate)
+        {
+            using (FMNoteUnitOfWork)
+            {
+                return predicate(FMNoteUnitOfWork);
+            }
+        }
+
+        #endregion
+
 
         protected void SetAuthorize(WebSiteUser webSiteUser)
         {

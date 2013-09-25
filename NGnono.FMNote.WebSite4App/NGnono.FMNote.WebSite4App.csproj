@@ -337,6 +337,11 @@
     <Content Include="Views\Bill\Index.cshtml" />
     <Content Include="Views\Shared\_FooterPartial.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Tag\Create.cshtml" />
+    <Content Include="Views\Tag\Delete.cshtml" />
+    <Content Include="Views\Tag\Details.cshtml" />
+    <Content Include="Views\Tag\Edit.cshtml" />
+    <Content Include="Views\Tag\List.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

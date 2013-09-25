@@ -109,13 +109,16 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BillController.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Models\BaseDTO.cs" />
     <Compile Include="Models\DTO\Account\IndexDTO.cs" />
     <Compile Include="Models\DTO\Bill\DetailDTO.cs" />
     <Compile Include="Models\BaseVO.cs" />
-    <Compile Include="Models\VO\BillVO.cs" />
-    <Compile Include="Models\VO\AccountVo.cs" />
+    <Compile Include="Models\ViewModel\BillVO.cs" />
+    <Compile Include="Models\ViewModel\AccountVo.cs" />
+    <Compile Include="Models\ViewModel\TagVO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApplication.cs" />
   </ItemGroup>

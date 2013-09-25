@@ -3,7 +3,7 @@
 namespace NGnono.FMNote.WebSite4App.Core.Models
 {
     [Serializable]
-    public abstract class BaseVO
+    public abstract class BaseViewModel
     {
     }
 }

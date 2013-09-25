@@ -1,13 +1,13 @@
 ﻿using NGnono.FMNote.Datas.Models;
 using NGnono.FMNote.Models.Enums;
+using NGnono.FMNote.Repository;
 using NGnono.FMNote.WebSite4App.Core.Models.DTO.Account;
-using NGnono.FMNote.WebSite4App.Core.Models.VO;
+using NGnono.FMNote.WebSite4App.Core.Models.ViewModel;
 using NGnono.FMNote.WebSupport.Models;
 using NGnono.FMNote.WebSupport.Mvc.Controllers;
 using NGnono.FMNote.WebSupport.Mvc.Filters;
 using NGnono.Framework.Security.Cryptography;
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -27,55 +27,89 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         private UserEntity CheckUser(string userName, string password)
         {
-            using (UnitOfWork)
+            var userEntity = ServiceInvoke(unitOfWork => unitOfWork.UserRepository.Get(v =>
+                                                                                  String.Compare(v.Name, userName,
+                                                                                                 StringComparison.OrdinalIgnoreCase) == 0)
+                                                              .FirstOrDefault());
+
+
+            if (userEntity == null)
             {
-                var userEntity = UnitOfWork.UserRepository.Get(v =>
-                            String.Compare(v.Name, userName, StringComparison.OrdinalIgnoreCase) == 0).FirstOrDefault();
-
-                if (userEntity == null)
-                {
-                    return null;
-                }
-
-                return PwdSecurityHelper.CheckEqual(password, userEntity.Password) ? userEntity : null;
+                return null;
             }
+
+            return PwdSecurityHelper.CheckEqual(password, userEntity.Password) ? userEntity : null;
+
         }
 
         private string SetPassword(int userId, string newPwd, string oldPwd)
         {
-            using (UnitOfWork)
-            {
-                var userEntity = UnitOfWork.UserRepository.Get(v => v.Id == userId).FirstOrDefault();
-                if (userEntity == null)
+            return ServiceInvoke(unitOfWork =>
                 {
-                    return "用户未找到";
-                }
+                    var userEntity = unitOfWork.UserRepository.Get(v => v.Id == userId).FirstOrDefault();
+                    if (userEntity == null)
+                    {
+                        return "用户未找到";
+                    }
 
-                if (PwdSecurityHelper.CheckEqual(oldPwd, userEntity.Password))
-                {
-                    userEntity.Password = PwdSecurityHelper.ComputeHash(newPwd);
-                    userEntity.UpdatedDate = DateTime.Now;
-                }
-                else
-                {
-                    return "原密码错";
-                }
+                    if (PwdSecurityHelper.CheckEqual(oldPwd, userEntity.Password))
+                    {
+                        userEntity.Password = PwdSecurityHelper.ComputeHash(newPwd);
+                        userEntity.UpdatedDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        return "原密码错";
+                    }
 
-                UnitOfWork.UserRepository.Update(userEntity);
-            }
+                    unitOfWork.UserRepository.Update(userEntity);
 
-            return null;
+                    return null;
+                });
+
+
+            //using (UnitOfWork)
+            //{
+            //    var userEntity = UnitOfWork.UserRepository.Get(v => v.Id == userId).FirstOrDefault();
+            //    if (userEntity == null)
+            //    {
+            //        return "用户未找到";
+            //    }
+
+            //    if (PwdSecurityHelper.CheckEqual(oldPwd, userEntity.Password))
+            //    {
+            //        userEntity.Password = PwdSecurityHelper.ComputeHash(newPwd);
+            //        userEntity.UpdatedDate = DateTime.Now;
+            //    }
+            //    else
+            //    {
+            //        return "原密码错";
+            //    }
+
+            //    UnitOfWork.UserRepository.Update(userEntity);
+            //}
+
+            //return null;
         }
 
         private UserEntity InsertUser(UserEntity user)
         {
-            using (UnitOfWork)
-            {
-                user.Password = PwdSecurityHelper.ComputeHash(user.Password);
-                var userEntity = UnitOfWork.UserRepository.Insert(user);
+            user.Password = PwdSecurityHelper.ComputeHash(user.Password);
 
-                return userEntity;
-            }
+
+            return ServiceInvoke<IFMNoteEFUnitOfWork, UserEntity>(v => v.UserRepository.Insert(user));
+
+            //return ExecFunc(v => v.UserRepository.Insert(user));
+
+            //return ItemSetter(user, (unitOfWork, userEntity) => unitOfWork.UserRepository.Insert(userEntity));
+
+            //using (UnitOfWork)
+            //{
+            //    user.Password = PwdSecurityHelper.ComputeHash(user.Password);
+            //    var userEntity = UnitOfWork.UserRepository.Insert(user);
+
+            //    return userEntity;
+            //}
         }
 
         #endregion
@@ -92,11 +126,11 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
 
-            return View(new LoginVO());
+            return View(new LoginViewModel());
         }
 
         [HttpPost]
-        public ActionResult Login(FormCollection formCollection, LoginVO model, string returnUrl)
+        public ActionResult Login(FormCollection formCollection, LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -146,7 +180,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         [HttpPost]
         [LoginAuthorize]
-        public ActionResult ChangePassword(FormCollection formCollection, ChangePasswordVO viewModel)
+        public ActionResult ChangePassword(FormCollection formCollection, ChangePasswordViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -178,7 +212,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         ////
         //// GET: /Account/Register
         [HttpPost]
-        public ActionResult Register(FormCollection formCollection, RegisterVO viewModel, string returnUrl)
+        public ActionResult Register(FormCollection formCollection, RegisterViewModel viewModel, string returnUrl)
         {
             if (ModelState.IsValid)
             {

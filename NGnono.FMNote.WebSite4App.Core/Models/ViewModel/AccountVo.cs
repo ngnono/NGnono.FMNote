@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using NGnono.Framework.Models;
 
-namespace NGnono.FMNote.WebSite4App.Core.Models.VO
+namespace NGnono.FMNote.WebSite4App.Core.Models.ViewModel
 {
-    public class LoginVO : BaseVO
+    public class LoginViewModel : BaseViewModel
     {
         [Required]
         [StringLength(32, MinimumLength = 6)]
@@ -22,7 +22,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.VO
         public string Password { get; set; }
     }
 
-    public class RegisterVO : BaseVO
+    public class RegisterViewModel : BaseViewModel
     {
         [Required]
         [RegularExpression("^[a-zA-Z]{1}[a-zA-Z0-9_]{5,31}$", ErrorMessage = "用户名必须以字母开头,可包含数字、字母、下划线,最少6位最多32位。")]
@@ -49,7 +49,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.VO
         public string ConfirmPassword { get; set; }
     }
 
-    public class ChangePasswordVO : BaseVO
+    public class ChangePasswordViewModel : BaseViewModel
     {
         [Required]
         [StringLength(32, MinimumLength = 6)]
@@ -69,7 +69,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.VO
         public string ConfirmPassword { get; set; }
     }
 
-    public class EditUserInfoVO : BaseVO
+    public class EditUserInfoViewModel : BaseViewModel
     {
         [StringLength(32, MinimumLength = 6)]
         [Display(Name = "昵称")]
