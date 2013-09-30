@@ -19,8 +19,8 @@ namespace NGnono.FMNote.Datas.Models
         public int SortOrder { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int CreatedUser { get; set; }
-        public System.DateTime UpdateDate { get; set; }
-        public int UpdateUser { get; set; }
+        public System.DateTime UpdatedDate { get; set; }
+        public int UpdatedUser { get; set; }
         public virtual ICollection<BillEntity> Bills { get; set; }
 
         #region Overrides of BaseEntity

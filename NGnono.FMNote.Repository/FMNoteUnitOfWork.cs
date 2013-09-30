@@ -1,4 +1,5 @@
-﻿using NGnono.FMNote.Datas.Models;
+﻿using System;
+using NGnono.FMNote.Datas.Models;
 using NGnono.Framework.Data.EF;
 using System.Data.Entity;
 

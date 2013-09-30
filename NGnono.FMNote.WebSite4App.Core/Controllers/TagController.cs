@@ -71,7 +71,6 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
             return orderBy;
         }
 
-
         #endregion
 
         public ActionResult Index()

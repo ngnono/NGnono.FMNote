@@ -118,6 +118,7 @@
     <Compile Include="Models\BaseVO.cs" />
     <Compile Include="Models\ViewModel\BillVO.cs" />
     <Compile Include="Models\ViewModel\AccountVo.cs" />
+    <Compile Include="Models\ViewModel\CategoryViewModel.cs" />
     <Compile Include="Models\ViewModel\TagVO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApplication.cs" />

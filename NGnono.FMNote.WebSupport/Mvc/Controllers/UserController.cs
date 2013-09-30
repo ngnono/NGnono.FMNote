@@ -135,8 +135,10 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
 
                 Invoke(true, service, action);
             }
-
-            throw new ArgumentException("TUnitOfWork No pre-defined. ");
+            else
+            {
+                throw new ArgumentException("TUnitOfWork No pre-defined. ");
+            }
         }
 
         protected bool ServiceInvoke<TUnitOfWork>(Predicate<TUnitOfWork> predicate)
@@ -163,7 +165,6 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
                         return func(service);
                     }
                 }
-
                 throw new ArgumentException("service is not implement IDisposable");
             }
 
@@ -182,11 +183,15 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
                         action(service);
                     }
                 }
-
-                throw new ArgumentException("service is not implement IDisposable");
+                else
+                {
+                    throw new ArgumentException("service is not implement IDisposable");
+                }
             }
-
-            action(service);
+            else
+            {
+                action(service);
+            }
         }
 
         private static bool Invoke<TIn>(bool autoDisposed, TIn service, Predicate<TIn> predicate)
@@ -201,7 +206,6 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
                         return predicate(service);
                     }
                 }
-
                 throw new ArgumentException("service is not implement IDisposable");
             }
 

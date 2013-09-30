@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\BillMode.cs" />
+    <Compile Include="Enums\CategoryMode.cs" />
     <Compile Include="Enums\DataStatus.cs" />
     <Compile Include="Enums\TagMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

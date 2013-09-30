@@ -1,4 +1,4 @@
-﻿@model NGnono.FMNote.Datas.Models.BillEntity
+﻿@model NGnono.FMNote.WebSite4App.Core.Models.ViewModel.BillCreateViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -7,7 +7,8 @@
 
 <h2>Create</h2>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
@@ -40,10 +41,13 @@
 
         <div class="editor-label">
             @Html.LabelFor(model => model.Category_Id)
+            <a href="@Url.Action("Create", "Category")">Add</a>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Category_Id)
-            @Html.ValidationMessageFor(model => model.Category_Id)
+        <div class="editor-field" id="div_category_container">
+            <input type="search" id="txt_category_search" value="" style="display: none;" />
+            <select name="select_category" id="select_category">
+            </select>
+
         </div>
 
         <div class="editor-label">
@@ -62,88 +66,93 @@
             @Html.ValidationMessageFor(model => model.Description)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.DataDateTime)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.DataDateTime)
-            @Html.ValidationMessageFor(model => model.DataDateTime)
-        </div>
+        <p>
+            <input type="button" value="addNewProperties" id="btn_addExtend" />
+        </p>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CreatedDate)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CreatedDate)
-            @Html.ValidationMessageFor(model => model.CreatedDate)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UpdatedDate)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.UpdatedDate)
-            @Html.ValidationMessageFor(model => model.UpdatedDate)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.CreatedUser)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.CreatedUser)
-            @Html.ValidationMessageFor(model => model.CreatedUser)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UpdatedUser)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.UpdatedUser)
-            @Html.ValidationMessageFor(model => model.UpdatedUser)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Status)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Status)
-            @Html.ValidationMessageFor(model => model.Status)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.IsDeleted)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.IsDeleted)
-            @Html.ValidationMessageFor(model => model.IsDeleted)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ExtendedContentType)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ExtendedContentType)
-            @Html.ValidationMessageFor(model => model.ExtendedContentType)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ExtendedContent)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ExtendedContent)
-            @Html.ValidationMessageFor(model => model.ExtendedContent)
+        <div id="div_extend_container">
         </div>
 
         <p>
             <input type="submit" value="Create" />
         </p>
     </fieldset>
+  
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
+@section FooterScripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(init);
+        var extendCount = 1;
+
+        function init() {
+            var $btn = $('#btn_addExtend');
+            $btn.bind('click', function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                $btn.enable = false;
+                var extendHtml = '<div id ="div_extend_' + extendCount + '"><label for="txtExtend_name_' + extendCount + '" class="ui-input-text">key' + extendCount + '</label><input id="txtExtend_name_' + extendCount + '" name="txtExtend_name"/><label for="txtExtend_val_' + extendCount + '" class="ui-input-text">val' + extendCount + '</label><input id="txtExtend_val_' + extendCount + '" name="txtExtend_val"/></div>';
+                $('#div_extend_container').append(extendHtml);
+
+                var $ec = $('#div_extend_' + extendCount);
+                $ec.bind('click', function (event1) {
+                    event1.stopPropagation();
+                    event1.preventDefault();
+                    $ec.enable = false;
+                    var $a = $ec.find('a');
+                    if ($a.size() == 0) {
+                        var delHtml = '<a id="" onclick="delHtml(\'' + $ec.attr('id') + '\');" href="javascript:void(0);" >del</a>';
+                        $ec.append(delHtml);
+
+                    } else {
+                        $a.remove();
+                    }
+
+                    $ec.trigger('create');
+                    $ec.enable = true;
+                });
+
+                $('#div_extend_container').trigger('create');
+                extendCount++;
+                $btn.enable = true;
+            });
+
+            $('#div_category_container').bind('click', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $('#txt_category_search').show();
+                $('#select_category').hide();
+            }).focus(function (e) {
+                $('#select_category').show();
+            }).blur(function (e) {
+                $('#txt_category_search').hide();
+                $('#select_category').show();
+            });
+
+            $('#txt_category_search').keyup(function (e) {
+                var t = $('#txt_category_search');
+                var k = t.val();
+                var params = 'k=' + k;
+                $.getJSON('@Url.Action("Search", "Category")', params, function (json) {
+                    var $s = $('#select_category');
+                    $s.empty();
+
+                    for (var i = 0; i < json.length; i++) {
+                        $s.append('<option value="' + json[i].Id + '">' + json[i].Name + '<option>');
+                    }
+                });
+            });
+        }
+
+        function delHtml(id) {
+            $('#' + id).remove();
+        }
+
+    </script>
 }

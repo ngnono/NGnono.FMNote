@@ -5,30 +5,30 @@ using System.Data.Objects;
 using EFTracingProvider;
 using EFProviderWrapperToolkit;
 using NGnono.Framework.Data.EF;
-using NGnono.FMNote.Datas.Models.Mapping;
 using NGnono.Framework.Logger;
+using NGnono.FMNote.Datas.Models.Mapping;
 
 namespace NGnono.FMNote.Datas.Models
 {
     public partial class NGnono_FMNoteContext : DbContext
     {
-        private static readonly NGnono.Framework.Logger.ILog _log;
+	    private static readonly NGnono.Framework.Logger.ILog _log;
 
         static NGnono_FMNoteContext()
         {
             Database.SetInitializer<NGnono_FMNoteContext>(null);
-            _log = LoggerManager.Current();
+			_log = LoggerManager.Current();
         }
 
-        /// <summary>
+		/// <summary>
         /// product ,no tracing
         /// </summary>
         public NGnono_FMNoteContext()
-            : this("Name=NGnono_FMNoteContext", true)
+            : this("Name=NGnono_FMNoteContext" , true)
         {
         }
 
-        /// <summary>
+		/// <summary>
         /// product ,no tracing
         /// </summary>
         /// <param name="nameOrConnectionString"></param>
@@ -38,15 +38,12 @@ namespace NGnono.FMNote.Datas.Models
         {
         }
 
-        #region ef tracing
+		#region ef tracing
 
         public NGnono_FMNoteContext(string nameOrConnectionString)
-            : base(EFTracingUtil.GetConnection(nameOrConnectionString), true)
+            : base(NGnono.Framework.Data.EF.EFTracingUtil.GetConnection(nameOrConnectionString), true)
         {
-
-            //EFTracingProviderConfiguration.RegisterProvider();
-            //EFTracingProviderConfiguration.LogAction = (v => _log.Debug(v.ToTraceString()));
-            var ctx = ((IObjectContextAdapter)this).ObjectContext;
+			var ctx = ((IObjectContextAdapter)this).ObjectContext;
 
             this.ObjectContext = ctx;
 
@@ -59,7 +56,7 @@ namespace NGnono.FMNote.Datas.Models
 
         #endregion
 
-        #region Tracing Extensions
+		#region Tracing Extensions
 
         private ObjectContext ObjectContext { get; set; }
 
@@ -124,7 +121,7 @@ namespace NGnono.FMNote.Datas.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+		            // modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Configurations.Add(new AdminAccessRightEntityMap());
             modelBuilder.Configurations.Add(new BillEntityMap());
             modelBuilder.Configurations.Add(new BillTagRelationEntityMap());
@@ -160,518 +157,515 @@ namespace NGnono.FMNote.Datas.Models
         }
     }
 
-    #region IEFUnitOfWork
+	#region IEFUnitOfWork
 
-    public interface INGnono_FMNoteContextEFUnitOfWork : IUnitOfWork
-    {
-        /// <summary>
+	public interface INGnono_FMNoteContextEFUnitOfWork : IUnitOfWork
+	{
+		/// <summary>
         /// AdminAccessRight
         /// </summary>
         EFRepository<AdminAccessRightEntity, int> AdminAccessRightRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Bill
         /// </summary>
         EFRepository<BillEntity, int> BillRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// BillTagRelation
         /// </summary>
         EFRepository<BillTagRelationEntity, int> BillTagRelationRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Brand
         /// </summary>
         EFRepository<BrandEntity, int> BrandRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Category
         /// </summary>
         EFRepository<CategoryEntity, int> CategoryRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Comment
         /// </summary>
         EFRepository<CommentEntity, int> CommentRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Favorite
         /// </summary>
         EFRepository<FavoriteEntity, int> FavoriteRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Feedback
         /// </summary>
         EFRepository<FeedbackEntity, int> FeedbackRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Group
         /// </summary>
         EFRepository<GroupEntity, int> GroupRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Like
         /// </summary>
         EFRepository<LikeEntity, int> LikeRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// OutsiteUser
         /// </summary>
         EFRepository<OutsiteUserEntity, int> OutsiteUserRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// PointHistory
         /// </summary>
         EFRepository<PointHistoryEntity, int> PointHistoryRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// PriceSetting
         /// </summary>
         EFRepository<PriceSettingEntity, int> PriceSettingRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Product
         /// </summary>
         EFRepository<ProductEntity, int> ProductRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// ProductStage
         /// </summary>
         EFRepository<ProductStageEntity, int> ProductStageRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// ProductUploadJob
         /// </summary>
         EFRepository<ProductUploadJobEntity, int> ProductUploadJobRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Promotion
         /// </summary>
         EFRepository<PromotionEntity, int> PromotionRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Promotion2Product
         /// </summary>
         EFRepository<Promotion2ProductEntity, int> Promotion2ProductRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// PromotionBrandRelation
         /// </summary>
         EFRepository<PromotionBrandRelationEntity, int> PromotionBrandRelationRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Remind
         /// </summary>
         EFRepository<RemindEntity, int> RemindRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Resource
         /// </summary>
         EFRepository<ResourceEntity, int> ResourceRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// ResourceStage
         /// </summary>
         EFRepository<ResourceStageEntity, int> ResourceStageRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Role
         /// </summary>
         EFRepository<RoleEntity, int> RoleRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// RoleAccessRight
         /// </summary>
         EFRepository<RoleAccessRightEntity, int> RoleAccessRightRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Seed
         /// </summary>
         EFRepository<SeedEntity, int> SeedRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// ShareHistory
         /// </summary>
         EFRepository<ShareHistoryEntity, int> ShareHistoryRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Store
         /// </summary>
         EFRepository<StoreEntity, int> StoreRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// Tag
         /// </summary>
         EFRepository<TagEntity, int> TagRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// User
         /// </summary>
         EFRepository<UserEntity, int> UserRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// UserAccount
         /// </summary>
         EFRepository<UserAccountEntity, int> UserAccountRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// UserRole
         /// </summary>
         EFRepository<UserRoleEntity, int> UserRoleRepository { get; }
 
-        /// <summary>
+		/// <summary>
         /// VerifyCode
         /// </summary>
         EFRepository<VerifyCodeEntity, int> VerifyCodeRepository { get; }
 
-    }
+	}
 
-    #endregion
+	#endregion
 
-    #region unitOfWork
+	#region unitOfWork
 
-    public class NGnono_FMNoteContextUnitOfWork : EFUnitOfWork, INGnono_FMNoteContextEFUnitOfWork
+	public class NGnono_FMNoteContextUnitOfWork : EFUnitOfWork , INGnono_FMNoteContextEFUnitOfWork
     {
-        #region fields
+		#region fields
 
-        /// <summary>
+		/// <summary>
         /// AdminAccessRightEntity _adminAccessRightRepository;
         /// </summary>
         private EFRepository<AdminAccessRightEntity, int> _adminAccessRightRepository;
 
-        /// <summary>
+		/// <summary>
         /// BillEntity _billRepository;
         /// </summary>
         private EFRepository<BillEntity, int> _billRepository;
 
-        /// <summary>
+		/// <summary>
         /// BillTagRelationEntity _billTagRelationRepository;
         /// </summary>
         private EFRepository<BillTagRelationEntity, int> _billTagRelationRepository;
 
-        /// <summary>
+		/// <summary>
         /// BrandEntity _brandRepository;
         /// </summary>
         private EFRepository<BrandEntity, int> _brandRepository;
 
-        /// <summary>
+		/// <summary>
         /// CategoryEntity _categoryRepository;
         /// </summary>
         private EFRepository<CategoryEntity, int> _categoryRepository;
 
-        /// <summary>
+		/// <summary>
         /// CommentEntity _commentRepository;
         /// </summary>
         private EFRepository<CommentEntity, int> _commentRepository;
 
-        /// <summary>
+		/// <summary>
         /// FavoriteEntity _favoriteRepository;
         /// </summary>
         private EFRepository<FavoriteEntity, int> _favoriteRepository;
 
-        /// <summary>
+		/// <summary>
         /// FeedbackEntity _feedbackRepository;
         /// </summary>
         private EFRepository<FeedbackEntity, int> _feedbackRepository;
 
-        /// <summary>
+		/// <summary>
         /// GroupEntity _groupRepository;
         /// </summary>
         private EFRepository<GroupEntity, int> _groupRepository;
 
-        /// <summary>
+		/// <summary>
         /// LikeEntity _likeRepository;
         /// </summary>
         private EFRepository<LikeEntity, int> _likeRepository;
 
-        /// <summary>
+		/// <summary>
         /// OutsiteUserEntity _outsiteUserRepository;
         /// </summary>
         private EFRepository<OutsiteUserEntity, int> _outsiteUserRepository;
 
-        /// <summary>
+		/// <summary>
         /// PointHistoryEntity _pointHistoryRepository;
         /// </summary>
         private EFRepository<PointHistoryEntity, int> _pointHistoryRepository;
 
-        /// <summary>
+		/// <summary>
         /// PriceSettingEntity _priceSettingRepository;
         /// </summary>
         private EFRepository<PriceSettingEntity, int> _priceSettingRepository;
 
-        /// <summary>
+		/// <summary>
         /// ProductEntity _productRepository;
         /// </summary>
         private EFRepository<ProductEntity, int> _productRepository;
 
-        /// <summary>
+		/// <summary>
         /// ProductStageEntity _productStageRepository;
         /// </summary>
         private EFRepository<ProductStageEntity, int> _productStageRepository;
 
-        /// <summary>
+		/// <summary>
         /// ProductUploadJobEntity _productUploadJobRepository;
         /// </summary>
         private EFRepository<ProductUploadJobEntity, int> _productUploadJobRepository;
 
-        /// <summary>
+		/// <summary>
         /// PromotionEntity _promotionRepository;
         /// </summary>
         private EFRepository<PromotionEntity, int> _promotionRepository;
 
-        /// <summary>
+		/// <summary>
         /// Promotion2ProductEntity _promotion2ProductRepository;
         /// </summary>
         private EFRepository<Promotion2ProductEntity, int> _promotion2ProductRepository;
 
-        /// <summary>
+		/// <summary>
         /// PromotionBrandRelationEntity _promotionBrandRelationRepository;
         /// </summary>
         private EFRepository<PromotionBrandRelationEntity, int> _promotionBrandRelationRepository;
 
-        /// <summary>
+		/// <summary>
         /// RemindEntity _remindRepository;
         /// </summary>
         private EFRepository<RemindEntity, int> _remindRepository;
 
-        /// <summary>
+		/// <summary>
         /// ResourceEntity _resourceRepository;
         /// </summary>
         private EFRepository<ResourceEntity, int> _resourceRepository;
 
-        /// <summary>
+		/// <summary>
         /// ResourceStageEntity _resourceStageRepository;
         /// </summary>
         private EFRepository<ResourceStageEntity, int> _resourceStageRepository;
 
-        /// <summary>
+		/// <summary>
         /// RoleEntity _roleRepository;
         /// </summary>
         private EFRepository<RoleEntity, int> _roleRepository;
 
-        /// <summary>
+		/// <summary>
         /// RoleAccessRightEntity _roleAccessRightRepository;
         /// </summary>
         private EFRepository<RoleAccessRightEntity, int> _roleAccessRightRepository;
 
-        /// <summary>
+		/// <summary>
         /// SeedEntity _seedRepository;
         /// </summary>
         private EFRepository<SeedEntity, int> _seedRepository;
 
-        /// <summary>
+		/// <summary>
         /// ShareHistoryEntity _shareHistoryRepository;
         /// </summary>
         private EFRepository<ShareHistoryEntity, int> _shareHistoryRepository;
 
-        /// <summary>
+		/// <summary>
         /// StoreEntity _storeRepository;
         /// </summary>
         private EFRepository<StoreEntity, int> _storeRepository;
 
-        /// <summary>
+		/// <summary>
         /// TagEntity _tagRepository;
         /// </summary>
         private EFRepository<TagEntity, int> _tagRepository;
 
-        /// <summary>
+		/// <summary>
         /// UserEntity _userRepository;
         /// </summary>
         private EFRepository<UserEntity, int> _userRepository;
 
-        /// <summary>
+		/// <summary>
         /// UserAccountEntity _userAccountRepository;
         /// </summary>
         private EFRepository<UserAccountEntity, int> _userAccountRepository;
 
-        /// <summary>
+		/// <summary>
         /// UserRoleEntity _userRoleRepository;
         /// </summary>
         private EFRepository<UserRoleEntity, int> _userRoleRepository;
 
-        /// <summary>
+		/// <summary>
         /// VerifyCodeEntity _verifyCodeRepository;
         /// </summary>
         private EFRepository<VerifyCodeEntity, int> _verifyCodeRepository;
 
-        #endregion
+		#endregion
 
-        #region .ctor
-
-        public NGnono_FMNoteContextUnitOfWork(DbContext dbContext)
-            : base(dbContext)
+	    #region .ctor
+	    
+        public NGnono_FMNoteContextUnitOfWork(DbContext dbContext) : base(dbContext)
         {
         }
 
-        #endregion
+		#endregion
 
         #region porperties
 
-        /// <summary>
+		/// <summary>
         /// AdminAccessRightEntity
         /// </summary>
-        public EFRepository<AdminAccessRightEntity, int> AdminAccessRightRepository { get { return _adminAccessRightRepository ?? (_adminAccessRightRepository = new EFRepository<AdminAccessRightEntity, int>(DbContext)); } }
+        public EFRepository<AdminAccessRightEntity, int> AdminAccessRightRepository { get { return _adminAccessRightRepository ?? ( _adminAccessRightRepository = new EFRepository<AdminAccessRightEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// BillEntity
         /// </summary>
-        public EFRepository<BillEntity, int> BillRepository { get { return _billRepository ?? (_billRepository = new EFRepository<BillEntity, int>(DbContext)); } }
+        public EFRepository<BillEntity, int> BillRepository { get { return _billRepository ?? ( _billRepository = new EFRepository<BillEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// BillTagRelationEntity
         /// </summary>
-        public EFRepository<BillTagRelationEntity, int> BillTagRelationRepository { get { return _billTagRelationRepository ?? (_billTagRelationRepository = new EFRepository<BillTagRelationEntity, int>(DbContext)); } }
+        public EFRepository<BillTagRelationEntity, int> BillTagRelationRepository { get { return _billTagRelationRepository ?? ( _billTagRelationRepository = new EFRepository<BillTagRelationEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// BrandEntity
         /// </summary>
-        public EFRepository<BrandEntity, int> BrandRepository { get { return _brandRepository ?? (_brandRepository = new EFRepository<BrandEntity, int>(DbContext)); } }
+        public EFRepository<BrandEntity, int> BrandRepository { get { return _brandRepository ?? ( _brandRepository = new EFRepository<BrandEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// CategoryEntity
         /// </summary>
-        public EFRepository<CategoryEntity, int> CategoryRepository { get { return _categoryRepository ?? (_categoryRepository = new EFRepository<CategoryEntity, int>(DbContext)); } }
+        public EFRepository<CategoryEntity, int> CategoryRepository { get { return _categoryRepository ?? ( _categoryRepository = new EFRepository<CategoryEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// CommentEntity
         /// </summary>
-        public EFRepository<CommentEntity, int> CommentRepository { get { return _commentRepository ?? (_commentRepository = new EFRepository<CommentEntity, int>(DbContext)); } }
+        public EFRepository<CommentEntity, int> CommentRepository { get { return _commentRepository ?? ( _commentRepository = new EFRepository<CommentEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// FavoriteEntity
         /// </summary>
-        public EFRepository<FavoriteEntity, int> FavoriteRepository { get { return _favoriteRepository ?? (_favoriteRepository = new EFRepository<FavoriteEntity, int>(DbContext)); } }
+        public EFRepository<FavoriteEntity, int> FavoriteRepository { get { return _favoriteRepository ?? ( _favoriteRepository = new EFRepository<FavoriteEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// FeedbackEntity
         /// </summary>
-        public EFRepository<FeedbackEntity, int> FeedbackRepository { get { return _feedbackRepository ?? (_feedbackRepository = new EFRepository<FeedbackEntity, int>(DbContext)); } }
+        public EFRepository<FeedbackEntity, int> FeedbackRepository { get { return _feedbackRepository ?? ( _feedbackRepository = new EFRepository<FeedbackEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// GroupEntity
         /// </summary>
-        public EFRepository<GroupEntity, int> GroupRepository { get { return _groupRepository ?? (_groupRepository = new EFRepository<GroupEntity, int>(DbContext)); } }
+        public EFRepository<GroupEntity, int> GroupRepository { get { return _groupRepository ?? ( _groupRepository = new EFRepository<GroupEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// LikeEntity
         /// </summary>
-        public EFRepository<LikeEntity, int> LikeRepository { get { return _likeRepository ?? (_likeRepository = new EFRepository<LikeEntity, int>(DbContext)); } }
+        public EFRepository<LikeEntity, int> LikeRepository { get { return _likeRepository ?? ( _likeRepository = new EFRepository<LikeEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// OutsiteUserEntity
         /// </summary>
-        public EFRepository<OutsiteUserEntity, int> OutsiteUserRepository { get { return _outsiteUserRepository ?? (_outsiteUserRepository = new EFRepository<OutsiteUserEntity, int>(DbContext)); } }
+        public EFRepository<OutsiteUserEntity, int> OutsiteUserRepository { get { return _outsiteUserRepository ?? ( _outsiteUserRepository = new EFRepository<OutsiteUserEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// PointHistoryEntity
         /// </summary>
-        public EFRepository<PointHistoryEntity, int> PointHistoryRepository { get { return _pointHistoryRepository ?? (_pointHistoryRepository = new EFRepository<PointHistoryEntity, int>(DbContext)); } }
+        public EFRepository<PointHistoryEntity, int> PointHistoryRepository { get { return _pointHistoryRepository ?? ( _pointHistoryRepository = new EFRepository<PointHistoryEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// PriceSettingEntity
         /// </summary>
-        public EFRepository<PriceSettingEntity, int> PriceSettingRepository { get { return _priceSettingRepository ?? (_priceSettingRepository = new EFRepository<PriceSettingEntity, int>(DbContext)); } }
+        public EFRepository<PriceSettingEntity, int> PriceSettingRepository { get { return _priceSettingRepository ?? ( _priceSettingRepository = new EFRepository<PriceSettingEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// ProductEntity
         /// </summary>
-        public EFRepository<ProductEntity, int> ProductRepository { get { return _productRepository ?? (_productRepository = new EFRepository<ProductEntity, int>(DbContext)); } }
+        public EFRepository<ProductEntity, int> ProductRepository { get { return _productRepository ?? ( _productRepository = new EFRepository<ProductEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// ProductStageEntity
         /// </summary>
-        public EFRepository<ProductStageEntity, int> ProductStageRepository { get { return _productStageRepository ?? (_productStageRepository = new EFRepository<ProductStageEntity, int>(DbContext)); } }
+        public EFRepository<ProductStageEntity, int> ProductStageRepository { get { return _productStageRepository ?? ( _productStageRepository = new EFRepository<ProductStageEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// ProductUploadJobEntity
         /// </summary>
-        public EFRepository<ProductUploadJobEntity, int> ProductUploadJobRepository { get { return _productUploadJobRepository ?? (_productUploadJobRepository = new EFRepository<ProductUploadJobEntity, int>(DbContext)); } }
+        public EFRepository<ProductUploadJobEntity, int> ProductUploadJobRepository { get { return _productUploadJobRepository ?? ( _productUploadJobRepository = new EFRepository<ProductUploadJobEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// PromotionEntity
         /// </summary>
-        public EFRepository<PromotionEntity, int> PromotionRepository { get { return _promotionRepository ?? (_promotionRepository = new EFRepository<PromotionEntity, int>(DbContext)); } }
+        public EFRepository<PromotionEntity, int> PromotionRepository { get { return _promotionRepository ?? ( _promotionRepository = new EFRepository<PromotionEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// Promotion2ProductEntity
         /// </summary>
-        public EFRepository<Promotion2ProductEntity, int> Promotion2ProductRepository { get { return _promotion2ProductRepository ?? (_promotion2ProductRepository = new EFRepository<Promotion2ProductEntity, int>(DbContext)); } }
+        public EFRepository<Promotion2ProductEntity, int> Promotion2ProductRepository { get { return _promotion2ProductRepository ?? ( _promotion2ProductRepository = new EFRepository<Promotion2ProductEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// PromotionBrandRelationEntity
         /// </summary>
-        public EFRepository<PromotionBrandRelationEntity, int> PromotionBrandRelationRepository { get { return _promotionBrandRelationRepository ?? (_promotionBrandRelationRepository = new EFRepository<PromotionBrandRelationEntity, int>(DbContext)); } }
+        public EFRepository<PromotionBrandRelationEntity, int> PromotionBrandRelationRepository { get { return _promotionBrandRelationRepository ?? ( _promotionBrandRelationRepository = new EFRepository<PromotionBrandRelationEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// RemindEntity
         /// </summary>
-        public EFRepository<RemindEntity, int> RemindRepository { get { return _remindRepository ?? (_remindRepository = new EFRepository<RemindEntity, int>(DbContext)); } }
+        public EFRepository<RemindEntity, int> RemindRepository { get { return _remindRepository ?? ( _remindRepository = new EFRepository<RemindEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// ResourceEntity
         /// </summary>
-        public EFRepository<ResourceEntity, int> ResourceRepository { get { return _resourceRepository ?? (_resourceRepository = new EFRepository<ResourceEntity, int>(DbContext)); } }
+        public EFRepository<ResourceEntity, int> ResourceRepository { get { return _resourceRepository ?? ( _resourceRepository = new EFRepository<ResourceEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// ResourceStageEntity
         /// </summary>
-        public EFRepository<ResourceStageEntity, int> ResourceStageRepository { get { return _resourceStageRepository ?? (_resourceStageRepository = new EFRepository<ResourceStageEntity, int>(DbContext)); } }
+        public EFRepository<ResourceStageEntity, int> ResourceStageRepository { get { return _resourceStageRepository ?? ( _resourceStageRepository = new EFRepository<ResourceStageEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// RoleEntity
         /// </summary>
-        public EFRepository<RoleEntity, int> RoleRepository { get { return _roleRepository ?? (_roleRepository = new EFRepository<RoleEntity, int>(DbContext)); } }
+        public EFRepository<RoleEntity, int> RoleRepository { get { return _roleRepository ?? ( _roleRepository = new EFRepository<RoleEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// RoleAccessRightEntity
         /// </summary>
-        public EFRepository<RoleAccessRightEntity, int> RoleAccessRightRepository { get { return _roleAccessRightRepository ?? (_roleAccessRightRepository = new EFRepository<RoleAccessRightEntity, int>(DbContext)); } }
+        public EFRepository<RoleAccessRightEntity, int> RoleAccessRightRepository { get { return _roleAccessRightRepository ?? ( _roleAccessRightRepository = new EFRepository<RoleAccessRightEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// SeedEntity
         /// </summary>
-        public EFRepository<SeedEntity, int> SeedRepository { get { return _seedRepository ?? (_seedRepository = new EFRepository<SeedEntity, int>(DbContext)); } }
+        public EFRepository<SeedEntity, int> SeedRepository { get { return _seedRepository ?? ( _seedRepository = new EFRepository<SeedEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// ShareHistoryEntity
         /// </summary>
-        public EFRepository<ShareHistoryEntity, int> ShareHistoryRepository { get { return _shareHistoryRepository ?? (_shareHistoryRepository = new EFRepository<ShareHistoryEntity, int>(DbContext)); } }
+        public EFRepository<ShareHistoryEntity, int> ShareHistoryRepository { get { return _shareHistoryRepository ?? ( _shareHistoryRepository = new EFRepository<ShareHistoryEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// StoreEntity
         /// </summary>
-        public EFRepository<StoreEntity, int> StoreRepository { get { return _storeRepository ?? (_storeRepository = new EFRepository<StoreEntity, int>(DbContext)); } }
+        public EFRepository<StoreEntity, int> StoreRepository { get { return _storeRepository ?? ( _storeRepository = new EFRepository<StoreEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// TagEntity
         /// </summary>
-        public EFRepository<TagEntity, int> TagRepository { get { return _tagRepository ?? (_tagRepository = new EFRepository<TagEntity, int>(DbContext)); } }
+        public EFRepository<TagEntity, int> TagRepository { get { return _tagRepository ?? ( _tagRepository = new EFRepository<TagEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// UserEntity
         /// </summary>
-        public EFRepository<UserEntity, int> UserRepository { get { return _userRepository ?? (_userRepository = new EFRepository<UserEntity, int>(DbContext)); } }
+        public EFRepository<UserEntity, int> UserRepository { get { return _userRepository ?? ( _userRepository = new EFRepository<UserEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// UserAccountEntity
         /// </summary>
-        public EFRepository<UserAccountEntity, int> UserAccountRepository { get { return _userAccountRepository ?? (_userAccountRepository = new EFRepository<UserAccountEntity, int>(DbContext)); } }
+        public EFRepository<UserAccountEntity, int> UserAccountRepository { get { return _userAccountRepository ?? ( _userAccountRepository = new EFRepository<UserAccountEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// UserRoleEntity
         /// </summary>
-        public EFRepository<UserRoleEntity, int> UserRoleRepository { get { return _userRoleRepository ?? (_userRoleRepository = new EFRepository<UserRoleEntity, int>(DbContext)); } }
+        public EFRepository<UserRoleEntity, int> UserRoleRepository { get { return _userRoleRepository ?? ( _userRoleRepository = new EFRepository<UserRoleEntity, int>(DbContext)); } }
 
-        /// <summary>
+		/// <summary>
         /// VerifyCodeEntity
         /// </summary>
-        public EFRepository<VerifyCodeEntity, int> VerifyCodeRepository { get { return _verifyCodeRepository ?? (_verifyCodeRepository = new EFRepository<VerifyCodeEntity, int>(DbContext)); } }
+        public EFRepository<VerifyCodeEntity, int> VerifyCodeRepository { get { return _verifyCodeRepository ?? ( _verifyCodeRepository = new EFRepository<VerifyCodeEntity, int>(DbContext)); } }
 
         #endregion
     }
 
-    #endregion
-
-
+	#endregion
 
 }

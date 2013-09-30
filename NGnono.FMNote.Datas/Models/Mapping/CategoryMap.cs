@@ -29,8 +29,8 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.Property(t => t.SortOrder).HasColumnName("SortOrder");
             this.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             this.Property(t => t.CreatedUser).HasColumnName("CreatedUser");
-            this.Property(t => t.UpdateDate).HasColumnName("UpdateDate");
-            this.Property(t => t.UpdateUser).HasColumnName("UpdateUser");
+            this.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
+            this.Property(t => t.UpdatedUser).HasColumnName("UpdatedUser");
 			LastInit();
         }
 

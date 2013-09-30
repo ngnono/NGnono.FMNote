@@ -6,6 +6,7 @@ using NGnono.FMNote.WebSite4App.Core.Models.ViewModel;
 using NGnono.FMNote.WebSupport.Models;
 using NGnono.FMNote.WebSupport.Mvc.Controllers;
 using NGnono.FMNote.WebSupport.Mvc.Filters;
+using NGnono.Framework.Models;
 using NGnono.Framework.Security.Cryptography;
 using System;
 using System.Linq;
@@ -92,13 +93,47 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
             //return null;
         }
 
-        private UserEntity InsertUser(UserEntity user)
+
+        internal struct MethodResult<T, TCode, TMsg>
         {
-            user.Password = PwdSecurityHelper.ComputeHash(user.Password);
+            public T Data { get; set; }
 
+            public TCode StatusCode { get; set; }
 
-            return ServiceInvoke<IFMNoteEFUnitOfWork, UserEntity>(v => v.UserRepository.Insert(user));
+            public TMsg Message { get; set; }
 
+            public bool IsSuccess { get; set; }
+        }
+
+        private MethodResult<UserEntity, int, string> InsertUser(UserEntity user)
+        {
+            var result = new MethodResult<UserEntity, int, string>();
+
+            //check user name
+            ServiceInvoke<IFMNoteEFUnitOfWork>(v =>
+                {
+                    //1 check
+                    //2 insert
+                    var checkUserName =
+                        v.UserRepository.Get(g => String.Compare(g.Name, user.Name, StringComparison.OrdinalIgnoreCase) == 0).FirstOrDefault() == null;
+
+                    if (!checkUserName)
+                    {
+                        result.StatusCode = 2;
+                        result.Message = "用户名已存在，请换个名字！";
+                        result.Data = null;
+                    }
+                    else
+                    {
+                        user.Password = PwdSecurityHelper.ComputeHash(user.Password);
+
+                        result.Data = v.UserRepository.Insert(user);
+                        result.IsSuccess = true;
+                        result.StatusCode = 1;
+                    }
+                });
+
+            return result;
             //return ExecFunc(v => v.UserRepository.Insert(user));
 
             //return ItemSetter(user, (unitOfWork, userEntity) => unitOfWork.UserRepository.Insert(userEntity));
@@ -236,23 +271,32 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
                         UserLevel = (int)UserLevel.User
                     };
 
-                var userEntity = InsertUser(tempUserEntity);
+                var result = InsertUser(tempUserEntity);
 
-                //写认证
-                SetAuthorize(new WebSiteUser(userEntity.Name, userEntity.Id, userEntity.ScreenName));
-
-                if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-            && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                if (result.IsSuccess)
                 {
-                    return Redirect(returnUrl);
-                }
+                    //写认证
+                    SetAuthorize(new WebSiteUser(result.Data.Name, result.Data.Id, result.Data.ScreenName));
 
-                return RedirectToAction("Index");
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                    {
+                        return Redirect(returnUrl);
+                    }
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("username", "用户名已经存在,请换个新名称！");
+                }
             }
 
             ModelState.AddModelError("", "验证错误.");
 
             return View(viewModel);
         }
+
+
     }
 }
