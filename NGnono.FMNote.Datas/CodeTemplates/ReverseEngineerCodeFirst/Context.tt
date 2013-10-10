@@ -199,9 +199,9 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
     
 	public class <#= classPreName #>ModelBinder : ModelBinderBase
     {
-        private readonly IRepository<<#= entityName #>, int> <#= titleClassName #>;
+        private readonly I<#= efHost.EntityContainer.Name #>EFUnitOfWork  <#= titleClassName #>;
 
-        public <#= classPreName #>ModelBinder(IRepository<<#= entityName #>, int> service)
+        public <#= classPreName #>ModelBinder(I<#= efHost.EntityContainer.Name #>EFUnitOfWork service)
         {
             <#= titleClassName #> = service;
         }
@@ -219,7 +219,17 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return <#= titleClassName #>.GetItem(Int32.Parse(modelId));
+		    var disposable = <#= titleClassName #> as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return <#= titleClassName #>.<#= classPreName #>Repository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return <#= titleClassName #>.<#= classPreName #>Repository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion

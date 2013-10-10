@@ -1,4 +1,5 @@
-﻿using NGnono.FMNote.Datas.Models;
+﻿using System.Collections.Generic;
+using NGnono.FMNote.Datas.Models;
 using NGnono.FMNote.Repository;
 using NGnono.FMNote.WebSupport.Auth;
 using NGnono.FMNote.WebSupport.Models;
@@ -18,7 +19,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
     {
         #region fields
 
-        private IFMNoteEFUnitOfWork _fmnoteUnitOfWork;
+        private INGnono_FMNoteContextEFUnitOfWork _fmnoteUnitOfWork;
 
         #endregion
 
@@ -29,34 +30,32 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
 
         #region properties
 
-        private IFMNoteEFUnitOfWork FMNoteUnitOfWork
+        private INGnono_FMNoteContextEFUnitOfWork FMNoteUnitOfWork
         {
-            get { return _fmnoteUnitOfWork ?? (_fmnoteUnitOfWork = GetService<IFMNoteEFUnitOfWork>()); }
+            get { return _fmnoteUnitOfWork ?? (_fmnoteUnitOfWork = GetService<INGnono_FMNoteContextEFUnitOfWork>()); }
         }
 
         #endregion
 
         #region methods
 
-        protected delegate IQueryable<TData> PagedListGetterHandler<TData>(IFMNoteEFUnitOfWork unitOfWork, Expression<Func<TData, bool>> filter, Func<IQueryable<TData>, IOrderedQueryable<TData>> orderby, PagerRequest pagerRequest, out int totalCount);
+        protected delegate IQueryable<TData> PagedListGetterHandler<TData>(INGnono_FMNoteContextEFUnitOfWork unitOfWork, Expression<Func<TData, bool>> filter, Func<IQueryable<TData>, IOrderedQueryable<TData>> orderby, PagerRequest pagerRequest, out int totalCount);
 
         protected PagerInfo<TData> PagedListGetter<TData, TFilterOptions, TOrderbyOptions>(PagerRequest pagerRequest, TFilterOptions filterOptions,
                                                           TOrderbyOptions orderbyOptions, PagedListGetterHandler<TData> getterHandler, Func<TFilterOptions, Expression<Func<TData, bool>>> filterConverter, Func<TOrderbyOptions, Func<IQueryable<TData>, IOrderedQueryable<TData>>> orderbyConverter)
         {
             int totalCount;
-            IQueryable<TData> datas;
+            IEnumerable<TData> datas;
             using (FMNoteUnitOfWork)
             {
-                datas = getterHandler(FMNoteUnitOfWork, filterConverter == null ? null : filterConverter(filterOptions), orderbyConverter == null ? null : orderbyConverter(orderbyOptions), pagerRequest, out totalCount);
+                datas = getterHandler(FMNoteUnitOfWork, filterConverter == null ? null : filterConverter(filterOptions), orderbyConverter == null ? null : orderbyConverter(orderbyOptions), pagerRequest, out totalCount).ToList();
             }
 
             return new PagerInfo<TData>(pagerRequest, totalCount, datas);
         }
 
-
-
         protected delegate IQueryable<TData> ListGetterHandler<TData>(
-            IFMNoteEFUnitOfWork unitOfWork, Expression<Func<TagEntity, bool>> filter,
+            INGnono_FMNoteContextEFUnitOfWork unitOfWork, Expression<Func<TagEntity, bool>> filter,
             Func<IQueryable<TData>, IOrderedQueryable<TData>> orderby);
 
         protected IQueryable<TData> ListGetter<TData, TFilterOptions, TOrderbyOptions>(TFilterOptions filterOptions,
@@ -84,7 +83,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
         //    return newData;
         //}
 
-        protected TData ItemSetter<TData>(TData data, Func<IFMNoteEFUnitOfWork, TData, TData> func)
+        protected TData ItemSetter<TData>(TData data, Func<INGnono_FMNoteContextEFUnitOfWork, TData, TData> func)
         {
             TData newData;
             using (FMNoteUnitOfWork)
@@ -95,7 +94,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
             return newData;
         }
 
-        private static readonly string IfmNoteEFUnitOfWork = typeof(IFMNoteEFUnitOfWork).Name;
+        private static readonly string IfmNoteEFUnitOfWork = typeof(INGnono_FMNoteContextEFUnitOfWork).Name;
 
         /// <summary>
         /// 是否是
@@ -212,7 +211,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
             return predicate(service);
         }
 
-        protected T ServiceInvoke<T>(Func<IFMNoteEFUnitOfWork, T> func)
+        protected T ServiceInvoke<T>(Func<INGnono_FMNoteContextEFUnitOfWork, T> func)
         {
             using (FMNoteUnitOfWork)
             {
@@ -220,7 +219,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
             }
         }
 
-        protected void ServiceInvoke(Action<IFMNoteEFUnitOfWork> action)
+        protected void ServiceInvoke(Action<INGnono_FMNoteContextEFUnitOfWork> action)
         {
             using (FMNoteUnitOfWork)
             {
@@ -228,7 +227,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
             }
         }
 
-        protected bool ServiceInvoke(Predicate<IFMNoteEFUnitOfWork> predicate)
+        protected bool ServiceInvoke(Predicate<INGnono_FMNoteContextEFUnitOfWork> predicate)
         {
             using (FMNoteUnitOfWork)
             {
@@ -237,7 +236,6 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
         }
 
         #endregion
-
 
         protected void SetAuthorize(WebSiteUser webSiteUser)
         {
@@ -383,6 +381,11 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
             return View("Success");
         }
 
+        protected ActionResult Success(object model)
+        {
+            return View("Success", model);
+        }
+
         protected JsonResult SuccessResponse()
         {
             return Json(new
@@ -452,7 +455,7 @@ namespace NGnono.FMNote.WebSupport.Mvc.Controllers
         [HttpGet]
         public virtual JsonResult AutoComplete(string name)
         {
-            return Json(new[] { new { Name = string.Empty } }
+            return Json(new[] { new { Name = String.Empty } }
                         , JsonRequestBehavior.AllowGet);
         }
     }

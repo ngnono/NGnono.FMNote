@@ -110,7 +110,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
             var result = new MethodResult<UserEntity, int, string>();
 
             //check user name
-            ServiceInvoke<IFMNoteEFUnitOfWork>(v =>
+            ServiceInvoke<NGnono_FMNoteContextUnitOfWork>(v =>
                 {
                     //1 check
                     //2 insert

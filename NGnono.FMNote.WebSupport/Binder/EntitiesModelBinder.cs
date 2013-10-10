@@ -1,4 +1,5 @@
 ﻿using NGnono.FMNote.Datas.Models;
+using NGnono.FMNote.Repository;
 using NGnono.Framework.Data;
 using NGnono.Framework.Web.Mvc.Binders;
 using System;
@@ -6,16 +7,15 @@ using System;
 namespace NGnono.FMNote.WebSupport.Binder
 {
 
-
     #region mvc modelbinder
 
     #region AdminAccessRightModelBinder
 
     public class AdminAccessRightModelBinder : ModelBinderBase
     {
-        private readonly IRepository<AdminAccessRightEntity, int> _adminaccessrightdminAccessRight;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _adminaccessrightdminAccessRight;
 
-        public AdminAccessRightModelBinder(IRepository<AdminAccessRightEntity, int> service)
+        public AdminAccessRightModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _adminaccessrightdminAccessRight = service;
         }
@@ -33,7 +33,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _adminaccessrightdminAccessRight.GetItem(Int32.Parse(modelId));
+            var disposable = _adminaccessrightdminAccessRight as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _adminaccessrightdminAccessRight.AdminAccessRightRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _adminaccessrightdminAccessRight.AdminAccessRightRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -53,9 +63,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class BillModelBinder : ModelBinderBase
     {
-        private readonly IRepository<BillEntity, int> _billill;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _billill;
 
-        public BillModelBinder(IRepository<BillEntity, int> service)
+        public BillModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _billill = service;
         }
@@ -73,7 +83,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _billill.GetItem(Int32.Parse(modelId));
+            var disposable = _billill as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _billill.BillRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _billill.BillRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -93,9 +113,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class BillTagRelationModelBinder : ModelBinderBase
     {
-        private readonly IRepository<BillTagRelationEntity, int> _billtagrelationillTagRelation;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _billtagrelationillTagRelation;
 
-        public BillTagRelationModelBinder(IRepository<BillTagRelationEntity, int> service)
+        public BillTagRelationModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _billtagrelationillTagRelation = service;
         }
@@ -113,7 +133,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _billtagrelationillTagRelation.GetItem(Int32.Parse(modelId));
+            var disposable = _billtagrelationillTagRelation as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _billtagrelationillTagRelation.BillTagRelationRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _billtagrelationillTagRelation.BillTagRelationRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -133,9 +163,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class BrandModelBinder : ModelBinderBase
     {
-        private readonly IRepository<BrandEntity, int> _brandrand;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _brandrand;
 
-        public BrandModelBinder(IRepository<BrandEntity, int> service)
+        public BrandModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _brandrand = service;
         }
@@ -153,7 +183,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _brandrand.GetItem(Int32.Parse(modelId));
+            var disposable = _brandrand as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _brandrand.BrandRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _brandrand.BrandRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -173,9 +213,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class CategoryModelBinder : ModelBinderBase
     {
-        private readonly IRepository<CategoryEntity, int> _categoryategory;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _categoryategory;
 
-        public CategoryModelBinder(IRepository<CategoryEntity, int> service)
+        public CategoryModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _categoryategory = service;
         }
@@ -193,7 +233,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _categoryategory.GetItem(Int32.Parse(modelId));
+            var disposable = _categoryategory as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _categoryategory.CategoryRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _categoryategory.CategoryRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -213,9 +263,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class CommentModelBinder : ModelBinderBase
     {
-        private readonly IRepository<CommentEntity, int> _commentomment;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _commentomment;
 
-        public CommentModelBinder(IRepository<CommentEntity, int> service)
+        public CommentModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _commentomment = service;
         }
@@ -233,7 +283,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _commentomment.GetItem(Int32.Parse(modelId));
+            var disposable = _commentomment as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _commentomment.CommentRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _commentomment.CommentRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -253,9 +313,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class FavoriteModelBinder : ModelBinderBase
     {
-        private readonly IRepository<FavoriteEntity, int> _favoriteavorite;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _favoriteavorite;
 
-        public FavoriteModelBinder(IRepository<FavoriteEntity, int> service)
+        public FavoriteModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _favoriteavorite = service;
         }
@@ -273,7 +333,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _favoriteavorite.GetItem(Int32.Parse(modelId));
+            var disposable = _favoriteavorite as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _favoriteavorite.FavoriteRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _favoriteavorite.FavoriteRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -293,9 +363,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class FeedbackModelBinder : ModelBinderBase
     {
-        private readonly IRepository<FeedbackEntity, int> _feedbackeedback;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _feedbackeedback;
 
-        public FeedbackModelBinder(IRepository<FeedbackEntity, int> service)
+        public FeedbackModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _feedbackeedback = service;
         }
@@ -313,7 +383,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _feedbackeedback.GetItem(Int32.Parse(modelId));
+            var disposable = _feedbackeedback as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _feedbackeedback.FeedbackRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _feedbackeedback.FeedbackRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -333,9 +413,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class GroupModelBinder : ModelBinderBase
     {
-        private readonly IRepository<GroupEntity, int> _grouproup;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _grouproup;
 
-        public GroupModelBinder(IRepository<GroupEntity, int> service)
+        public GroupModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _grouproup = service;
         }
@@ -353,7 +433,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _grouproup.GetItem(Int32.Parse(modelId));
+            var disposable = _grouproup as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _grouproup.GroupRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _grouproup.GroupRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -373,9 +463,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class LikeModelBinder : ModelBinderBase
     {
-        private readonly IRepository<LikeEntity, int> _likeike;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _likeike;
 
-        public LikeModelBinder(IRepository<LikeEntity, int> service)
+        public LikeModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _likeike = service;
         }
@@ -393,7 +483,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _likeike.GetItem(Int32.Parse(modelId));
+            var disposable = _likeike as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _likeike.LikeRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _likeike.LikeRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -413,9 +513,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class OutsiteUserModelBinder : ModelBinderBase
     {
-        private readonly IRepository<OutsiteUserEntity, int> _outsiteuserutsiteUser;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _outsiteuserutsiteUser;
 
-        public OutsiteUserModelBinder(IRepository<OutsiteUserEntity, int> service)
+        public OutsiteUserModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _outsiteuserutsiteUser = service;
         }
@@ -433,7 +533,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _outsiteuserutsiteUser.GetItem(Int32.Parse(modelId));
+            var disposable = _outsiteuserutsiteUser as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _outsiteuserutsiteUser.OutsiteUserRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _outsiteuserutsiteUser.OutsiteUserRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -453,9 +563,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class PointHistoryModelBinder : ModelBinderBase
     {
-        private readonly IRepository<PointHistoryEntity, int> _pointhistoryointHistory;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _pointhistoryointHistory;
 
-        public PointHistoryModelBinder(IRepository<PointHistoryEntity, int> service)
+        public PointHistoryModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _pointhistoryointHistory = service;
         }
@@ -473,7 +583,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _pointhistoryointHistory.GetItem(Int32.Parse(modelId));
+            var disposable = _pointhistoryointHistory as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _pointhistoryointHistory.PointHistoryRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _pointhistoryointHistory.PointHistoryRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -493,9 +613,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class PriceSettingModelBinder : ModelBinderBase
     {
-        private readonly IRepository<PriceSettingEntity, int> _pricesettingriceSetting;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _pricesettingriceSetting;
 
-        public PriceSettingModelBinder(IRepository<PriceSettingEntity, int> service)
+        public PriceSettingModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _pricesettingriceSetting = service;
         }
@@ -513,7 +633,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _pricesettingriceSetting.GetItem(Int32.Parse(modelId));
+            var disposable = _pricesettingriceSetting as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _pricesettingriceSetting.PriceSettingRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _pricesettingriceSetting.PriceSettingRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -533,9 +663,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class ProductModelBinder : ModelBinderBase
     {
-        private readonly IRepository<ProductEntity, int> _productroduct;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _productroduct;
 
-        public ProductModelBinder(IRepository<ProductEntity, int> service)
+        public ProductModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _productroduct = service;
         }
@@ -553,7 +683,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _productroduct.GetItem(Int32.Parse(modelId));
+            var disposable = _productroduct as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _productroduct.ProductRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _productroduct.ProductRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -573,9 +713,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class ProductStageModelBinder : ModelBinderBase
     {
-        private readonly IRepository<ProductStageEntity, int> _productstageroductStage;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _productstageroductStage;
 
-        public ProductStageModelBinder(IRepository<ProductStageEntity, int> service)
+        public ProductStageModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _productstageroductStage = service;
         }
@@ -593,7 +733,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _productstageroductStage.GetItem(Int32.Parse(modelId));
+            var disposable = _productstageroductStage as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _productstageroductStage.ProductStageRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _productstageroductStage.ProductStageRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -613,9 +763,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class ProductUploadJobModelBinder : ModelBinderBase
     {
-        private readonly IRepository<ProductUploadJobEntity, int> _productuploadjobroductUploadJob;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _productuploadjobroductUploadJob;
 
-        public ProductUploadJobModelBinder(IRepository<ProductUploadJobEntity, int> service)
+        public ProductUploadJobModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _productuploadjobroductUploadJob = service;
         }
@@ -633,7 +783,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _productuploadjobroductUploadJob.GetItem(Int32.Parse(modelId));
+            var disposable = _productuploadjobroductUploadJob as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _productuploadjobroductUploadJob.ProductUploadJobRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _productuploadjobroductUploadJob.ProductUploadJobRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -653,9 +813,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class PromotionModelBinder : ModelBinderBase
     {
-        private readonly IRepository<PromotionEntity, int> _promotionromotion;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _promotionromotion;
 
-        public PromotionModelBinder(IRepository<PromotionEntity, int> service)
+        public PromotionModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _promotionromotion = service;
         }
@@ -673,7 +833,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _promotionromotion.GetItem(Int32.Parse(modelId));
+            var disposable = _promotionromotion as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _promotionromotion.PromotionRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _promotionromotion.PromotionRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -693,9 +863,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class Promotion2ProductModelBinder : ModelBinderBase
     {
-        private readonly IRepository<Promotion2ProductEntity, int> _promotion2productromotion2Product;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _promotion2productromotion2Product;
 
-        public Promotion2ProductModelBinder(IRepository<Promotion2ProductEntity, int> service)
+        public Promotion2ProductModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _promotion2productromotion2Product = service;
         }
@@ -713,7 +883,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _promotion2productromotion2Product.GetItem(Int32.Parse(modelId));
+            var disposable = _promotion2productromotion2Product as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _promotion2productromotion2Product.Promotion2ProductRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _promotion2productromotion2Product.Promotion2ProductRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -733,9 +913,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class PromotionBrandRelationModelBinder : ModelBinderBase
     {
-        private readonly IRepository<PromotionBrandRelationEntity, int> _promotionbrandrelationromotionBrandRelation;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _promotionbrandrelationromotionBrandRelation;
 
-        public PromotionBrandRelationModelBinder(IRepository<PromotionBrandRelationEntity, int> service)
+        public PromotionBrandRelationModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _promotionbrandrelationromotionBrandRelation = service;
         }
@@ -753,7 +933,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _promotionbrandrelationromotionBrandRelation.GetItem(Int32.Parse(modelId));
+            var disposable = _promotionbrandrelationromotionBrandRelation as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _promotionbrandrelationromotionBrandRelation.PromotionBrandRelationRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _promotionbrandrelationromotionBrandRelation.PromotionBrandRelationRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -773,9 +963,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class RemindModelBinder : ModelBinderBase
     {
-        private readonly IRepository<RemindEntity, int> _remindemind;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _remindemind;
 
-        public RemindModelBinder(IRepository<RemindEntity, int> service)
+        public RemindModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _remindemind = service;
         }
@@ -793,7 +983,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _remindemind.GetItem(Int32.Parse(modelId));
+            var disposable = _remindemind as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _remindemind.RemindRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _remindemind.RemindRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -813,9 +1013,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class ResourceModelBinder : ModelBinderBase
     {
-        private readonly IRepository<ResourceEntity, int> _resourceesource;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _resourceesource;
 
-        public ResourceModelBinder(IRepository<ResourceEntity, int> service)
+        public ResourceModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _resourceesource = service;
         }
@@ -833,7 +1033,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _resourceesource.GetItem(Int32.Parse(modelId));
+            var disposable = _resourceesource as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _resourceesource.ResourceRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _resourceesource.ResourceRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -853,9 +1063,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class ResourceStageModelBinder : ModelBinderBase
     {
-        private readonly IRepository<ResourceStageEntity, int> _resourcestageesourceStage;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _resourcestageesourceStage;
 
-        public ResourceStageModelBinder(IRepository<ResourceStageEntity, int> service)
+        public ResourceStageModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _resourcestageesourceStage = service;
         }
@@ -873,7 +1083,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _resourcestageesourceStage.GetItem(Int32.Parse(modelId));
+            var disposable = _resourcestageesourceStage as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _resourcestageesourceStage.ResourceStageRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _resourcestageesourceStage.ResourceStageRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -893,9 +1113,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class RoleModelBinder : ModelBinderBase
     {
-        private readonly IRepository<RoleEntity, int> _roleole;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _roleole;
 
-        public RoleModelBinder(IRepository<RoleEntity, int> service)
+        public RoleModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _roleole = service;
         }
@@ -913,7 +1133,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _roleole.GetItem(Int32.Parse(modelId));
+            var disposable = _roleole as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _roleole.RoleRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _roleole.RoleRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -933,9 +1163,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class RoleAccessRightModelBinder : ModelBinderBase
     {
-        private readonly IRepository<RoleAccessRightEntity, int> _roleaccessrightoleAccessRight;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _roleaccessrightoleAccessRight;
 
-        public RoleAccessRightModelBinder(IRepository<RoleAccessRightEntity, int> service)
+        public RoleAccessRightModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _roleaccessrightoleAccessRight = service;
         }
@@ -953,7 +1183,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _roleaccessrightoleAccessRight.GetItem(Int32.Parse(modelId));
+            var disposable = _roleaccessrightoleAccessRight as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _roleaccessrightoleAccessRight.RoleAccessRightRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _roleaccessrightoleAccessRight.RoleAccessRightRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -973,9 +1213,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class SeedModelBinder : ModelBinderBase
     {
-        private readonly IRepository<SeedEntity, int> _seedeed;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _seedeed;
 
-        public SeedModelBinder(IRepository<SeedEntity, int> service)
+        public SeedModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _seedeed = service;
         }
@@ -993,7 +1233,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _seedeed.GetItem(Int32.Parse(modelId));
+            var disposable = _seedeed as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _seedeed.SeedRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _seedeed.SeedRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -1013,9 +1263,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class ShareHistoryModelBinder : ModelBinderBase
     {
-        private readonly IRepository<ShareHistoryEntity, int> _sharehistoryhareHistory;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _sharehistoryhareHistory;
 
-        public ShareHistoryModelBinder(IRepository<ShareHistoryEntity, int> service)
+        public ShareHistoryModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _sharehistoryhareHistory = service;
         }
@@ -1033,7 +1283,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _sharehistoryhareHistory.GetItem(Int32.Parse(modelId));
+            var disposable = _sharehistoryhareHistory as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _sharehistoryhareHistory.ShareHistoryRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _sharehistoryhareHistory.ShareHistoryRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -1053,9 +1313,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class StoreModelBinder : ModelBinderBase
     {
-        private readonly IRepository<StoreEntity, int> _storetore;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _storetore;
 
-        public StoreModelBinder(IRepository<StoreEntity, int> service)
+        public StoreModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _storetore = service;
         }
@@ -1073,7 +1333,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _storetore.GetItem(Int32.Parse(modelId));
+            var disposable = _storetore as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _storetore.StoreRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _storetore.StoreRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -1093,9 +1363,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class TagModelBinder : ModelBinderBase
     {
-        private readonly IRepository<TagEntity, int> _tagag;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _tagag;
 
-        public TagModelBinder(IRepository<TagEntity, int> service)
+        public TagModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _tagag = service;
         }
@@ -1113,7 +1383,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _tagag.GetItem(Int32.Parse(modelId));
+            var disposable = _tagag as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _tagag.TagRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _tagag.TagRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -1133,9 +1413,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class UserModelBinder : ModelBinderBase
     {
-        private readonly IRepository<UserEntity, int> _userser;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _userser;
 
-        public UserModelBinder(IRepository<UserEntity, int> service)
+        public UserModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _userser = service;
         }
@@ -1153,7 +1433,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _userser.GetItem(Int32.Parse(modelId));
+            var disposable = _userser as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _userser.UserRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _userser.UserRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -1173,9 +1463,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class UserAccountModelBinder : ModelBinderBase
     {
-        private readonly IRepository<UserAccountEntity, int> _useraccountserAccount;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _useraccountserAccount;
 
-        public UserAccountModelBinder(IRepository<UserAccountEntity, int> service)
+        public UserAccountModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _useraccountserAccount = service;
         }
@@ -1193,7 +1483,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _useraccountserAccount.GetItem(Int32.Parse(modelId));
+            var disposable = _useraccountserAccount as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _useraccountserAccount.UserAccountRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _useraccountserAccount.UserAccountRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -1213,9 +1513,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class UserRoleModelBinder : ModelBinderBase
     {
-        private readonly IRepository<UserRoleEntity, int> _userroleserRole;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _userroleserRole;
 
-        public UserRoleModelBinder(IRepository<UserRoleEntity, int> service)
+        public UserRoleModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _userroleserRole = service;
         }
@@ -1233,7 +1533,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _userroleserRole.GetItem(Int32.Parse(modelId));
+            var disposable = _userroleserRole as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _userroleserRole.UserRoleRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _userroleserRole.UserRoleRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion
@@ -1253,9 +1563,9 @@ namespace NGnono.FMNote.WebSupport.Binder
 
     public class VerifyCodeModelBinder : ModelBinderBase
     {
-        private readonly IRepository<VerifyCodeEntity, int> _verifycodeerifyCode;
+        private readonly INGnono_FMNoteContextEFUnitOfWork _verifycodeerifyCode;
 
-        public VerifyCodeModelBinder(IRepository<VerifyCodeEntity, int> service)
+        public VerifyCodeModelBinder(INGnono_FMNoteContextEFUnitOfWork service)
         {
             _verifycodeerifyCode = service;
         }
@@ -1273,7 +1583,17 @@ namespace NGnono.FMNote.WebSupport.Binder
         /// </returns>
         protected override object GetModelInstance(string modelId)
         {
-            return _verifycodeerifyCode.GetItem(Int32.Parse(modelId));
+            var disposable = _verifycodeerifyCode as IDisposable;
+
+            if (disposable != null)
+            {
+                using (disposable)
+                {
+                    return _verifycodeerifyCode.VerifyCodeRepository.GetItem(Int32.Parse(modelId));
+                }
+            }
+
+            return _verifycodeerifyCode.VerifyCodeRepository.GetItem(Int32.Parse(modelId));
         }
 
         #endregion

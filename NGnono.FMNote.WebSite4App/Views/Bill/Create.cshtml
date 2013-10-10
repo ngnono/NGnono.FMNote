@@ -40,14 +40,23 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Category_Id)
-            <a href="@Url.Action("Create", "Category")">Add</a>
+            <label for="txt_tag_search">标签</label>
+            <a href="@Url.Action("List", "Tag")">编辑</a>
+        </div>
+        <div class="editor-field" id="div_tag_container">
+            <input type="search" id="txt_tag_search" value="" style="display: none;" />
+            <select name="select_tag" id="select_tag">
+            </select>
+        </div>
+
+        <div class="editor-label">
+            <label for="txt_category_search">分类</label>
+            <a href="@Url.Action("List", "Category")">编辑</a>
         </div>
         <div class="editor-field" id="div_category_container">
             <input type="search" id="txt_category_search" value="" style="display: none;" />
             <select name="select_category" id="select_category">
             </select>
-
         </div>
 
         <div class="editor-label">
@@ -149,7 +158,7 @@
                 });
             });
         }
-
+        
         function delHtml(id) {
             $('#' + id).remove();
         }

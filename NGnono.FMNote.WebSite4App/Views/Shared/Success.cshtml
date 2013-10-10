@@ -1,0 +1,9 @@
+﻿@model NGnono.FMNote.WebSite4App.Core.Models.ViewModel.SuccessViewModel
+
+@{
+    ViewBag.Title = "Success";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@this.Model.Msg</h2>
+<h3><a href="@this.Model.RedirectUrl">@this.Model.RedirectText</a></h3>

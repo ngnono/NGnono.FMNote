@@ -51,7 +51,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         private BillEntity Update(BillEntity entity)
         {
 
-            ServiceInvoke<IFMNoteEFUnitOfWork>(s => s.BillRepository.Update(entity));
+            ServiceInvoke<NGnono_FMNoteContextUnitOfWork>(s => s.BillRepository.Update(entity));
 
             return entity;
         }

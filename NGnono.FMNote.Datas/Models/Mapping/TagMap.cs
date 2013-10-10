@@ -15,6 +15,15 @@ namespace NGnono.FMNote.Datas.Models.Mapping
                 .IsRequired()
                 .HasMaxLength(64);
 
+            this.Property(t => t.SecName)
+                .IsRequired()
+                .HasMaxLength(64);
+
+            this.Property(t => t.Index)
+                .IsRequired()
+                .IsFixedLength()
+                .HasMaxLength(1);
+
             this.Property(t => t.Description)
                 .IsRequired();
 
@@ -22,6 +31,8 @@ namespace NGnono.FMNote.Datas.Models.Mapping
             this.ToTable("Tag");
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.Name).HasColumnName("Name");
+            this.Property(t => t.SecName).HasColumnName("SecName");
+            this.Property(t => t.Index).HasColumnName("Index");
             this.Property(t => t.Description).HasColumnName("Description");
             this.Property(t => t.SortOrder).HasColumnName("SortOrder");
             this.Property(t => t.Status).HasColumnName("Status");

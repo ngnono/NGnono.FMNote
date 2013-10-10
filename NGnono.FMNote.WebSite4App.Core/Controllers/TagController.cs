@@ -24,7 +24,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         private PagerInfo<TagEntity> GetList(PagerRequest pagerRequest, TagFilterOptions filterOptions, TagSortOptions sortOptions)
         {
             var paged = PagedListGetter(pagerRequest, filterOptions, sortOptions,
-                                        (IFMNoteEFUnitOfWork unitOfWork,
+                                        (INGnono_FMNoteContextEFUnitOfWork unitOfWork,
                                          Expression<Func<TagEntity, bool>> filter,
                                          Func<IQueryable<TagEntity>, IOrderedQueryable<TagEntity>> @orderby, PagerRequest pRequest,
                                          out int totalCount) => unitOfWork.TagRepository
@@ -151,7 +151,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
             var result = new ExecuteResult<int>();
 
 
-            ServiceInvoke<IFMNoteEFUnitOfWork>(v => v.TagRepository.Update(model));
+            ServiceInvoke<INGnono_FMNoteContextEFUnitOfWork>(v => v.TagRepository.Update(model));
 
             jsonResult.Data = result;
 
@@ -161,6 +161,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         [HttpGet]
         public ActionResult List(PagerRequest pagerRequest, TagFilterOptions filterOptions, TagSortOptions sortOptions)
         {
+            filterOptions.UserId = CurrentUser.CustomerId;
             var paged = GetList(pagerRequest, filterOptions, sortOptions);
 
             return View(paged);

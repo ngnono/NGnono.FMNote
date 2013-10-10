@@ -7,7 +7,7 @@ namespace NGnono.FMNote.Repository
 {
     #region IEFUnitOfWork
 
-    public interface IFMNoteEFUnitOfWork : IUnitOfWork
+    public interface INGnono_FMNoteContextEFUnitOfWork : IUnitOfWork
     {
         /// <summary>
         /// AdminAccessRight
@@ -175,7 +175,7 @@ namespace NGnono.FMNote.Repository
 
     #region unitOfWork
 
-    public class FMNoteUnitOfWork : EFUnitOfWork, IFMNoteEFUnitOfWork
+    public class NGnono_FMNoteContextUnitOfWork : EFUnitOfWork, INGnono_FMNoteContextEFUnitOfWork
     {
         #region fields
 
@@ -343,7 +343,7 @@ namespace NGnono.FMNote.Repository
 
         #region .ctor
 
-        public FMNoteUnitOfWork(DbContext dbContext)
+        public NGnono_FMNoteContextUnitOfWork(DbContext dbContext)
             : base(dbContext)
         {
         }

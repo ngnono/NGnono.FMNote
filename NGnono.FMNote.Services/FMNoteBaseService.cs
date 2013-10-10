@@ -10,9 +10,9 @@ namespace NGnono.FMNote.Services
         {
         }
 
-        protected IFMNoteEFUnitOfWork FMNoteUnitOfWork
+        protected INGnono_FMNoteContextEFUnitOfWork FMNoteUnitOfWork
         {
-            get { return (IFMNoteEFUnitOfWork)UnitOfWork; }
+            get { return (INGnono_FMNoteContextEFUnitOfWork)UnitOfWork; }
         }
     }
 }

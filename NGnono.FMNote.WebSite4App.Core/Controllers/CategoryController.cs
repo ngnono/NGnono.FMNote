@@ -27,7 +27,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         private PagerInfo<CategoryEntity> GetList(PagerRequest pagerRequest, CategoryFilterOptions filterOptions, CategorySortOptions sortOptions)
         {
             var paged = PagedListGetter(pagerRequest, filterOptions, sortOptions,
-                                        (IFMNoteEFUnitOfWork unitOfWork,
+                                        (INGnono_FMNoteContextEFUnitOfWork unitOfWork,
                                          Expression<Func<CategoryEntity, bool>> filter,
                                          Func<IQueryable<CategoryEntity>, IOrderedQueryable<CategoryEntity>> @orderby, PagerRequest pRequest,
                                          out int totalCount) => unitOfWork.CategoryRepository
@@ -78,7 +78,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         public ActionResult Search(string k)
         {
-            var data = ServiceInvoke<IFMNoteEFUnitOfWork, IEnumerable<dynamic>>(
+            var data = ServiceInvoke<NGnono_FMNoteContextUnitOfWork, IEnumerable<dynamic>>(
                 s => s.CategoryRepository.Get(v => v.User_Id == CurrentUser.CustomerId && v.Name.Contains(k)).Take(10).Select(v => new
                     {
                         v.Id,
@@ -107,11 +107,9 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(FormCollection formCollection, CategoryCreateViewModel vo)
+        public ActionResult Create(FormCollection formCollection, CategoryCreateViewModel vo, string returnUrl)
         {
-            var jsonResult = new JsonResult { ContentEncoding = Encoding.UTF8 };
-
-            var result = new ExecuteResult<int>();
+            //var result = new ExecuteResult<int>();
 
             if (ModelState.IsValid)
             {
@@ -123,46 +121,48 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
                 tmpEntity.CreatedUser = CurrentUser.CustomerId;
                 tmpEntity.User_Id = CurrentUser.CustomerId;
 
+                var entity = ServiceInvoke(unitOfWork => unitOfWork.CategoryRepository.Insert(tmpEntity));
 
-                var userEntity = ServiceInvoke(unitOfWork => unitOfWork.CategoryRepository.Insert(tmpEntity));
+                if (!Url.IsLocalUrl(returnUrl))
+                {
+                    returnUrl = Url.Action("Index");
+                }
 
-                result.Data = userEntity.Id;
-
+                return Success(new SuccessViewModel
+                    {
+                        Msg = String.Format("分类:{0} 添加成功。", entity.Name),
+                        RedirectUrl = returnUrl,
+                        RedirectText = "返回"
+                    });
             }
-            else
-            {
-                result.StatusCode = StatusCode.ClientError;
-            }
 
-            jsonResult.Data = result;
-
-            return jsonResult;
+            return View(vo);
         }
 
         [HttpGet]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
-        public ActionResult Edit([FetchCategory(KeyName = "tagid")]CategoryEntity model)
+        public ActionResult Edit([FetchCategory(KeyName = "id")]CategoryEntity model)
         {
             return View(model);
         }
 
         [HttpPost]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
-        public ActionResult Edit(FormCollection formCollection, [FetchCategory(KeyName = "tagid")]CategoryEntity model)
+        public ActionResult Edit(FormCollection formCollection, [FetchCategory(KeyName = "id")]CategoryEntity model)
         {
             return View();
         }
 
         [HttpGet]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
-        public ActionResult Delete([FetchCategory(KeyName = "tagid")]CategoryEntity model)
+        public ActionResult Delete([FetchCategory(KeyName = "id")]CategoryEntity model)
         {
             return View(model);
         }
 
         [HttpPost]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
-        public ActionResult Delete(FormCollection formCollection, [FetchCategory(KeyName = "tagid")]CategoryEntity model)
+        public ActionResult Delete(FormCollection formCollection, [FetchCategory(KeyName = "id")]CategoryEntity model)
         {
             model.UpdatedDate = DateTime.Now;
             model.UpdatedUser = CurrentUser.CustomerId;
@@ -173,7 +173,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
             var result = new ExecuteResult<int>();
 
 
-            ServiceInvoke<IFMNoteEFUnitOfWork>(v => v.CategoryRepository.Update(model));
+            ServiceInvoke<NGnono_FMNoteContextUnitOfWork>(v => v.CategoryRepository.Update(model));
 
             jsonResult.Data = result;
 
@@ -181,16 +181,16 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         }
 
         [HttpGet]
-        public ActionResult List(PagerRequest pagerRequest, CategoryFilterOptions filterOptions, CategorySortOptions sortOptions)
+        public ActionResult List(PagerRequest pagerRequest, CategoryFilterOptions filter, CategorySortOptions? sort)
         {
-            var paged = GetList(pagerRequest, filterOptions, sortOptions);
+            var paged = GetList(pagerRequest, filter, sort ?? CategorySortOptions.Default);
 
             return View(paged);
         }
 
         [HttpGet]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
-        public ActionResult Details([FetchCategory(KeyName = "tagid")]CategoryEntity model)
+        public ActionResult Details([FetchCategory(KeyName = "id")]CategoryEntity model)
         {
             return View(model);
         }
