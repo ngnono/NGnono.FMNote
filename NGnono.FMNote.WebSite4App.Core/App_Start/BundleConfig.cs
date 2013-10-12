@@ -24,6 +24,10 @@ namespace NGnono.FMNote.WebSite4App.Core.App_Start
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/bootstrap*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jqmwidget").Include("~/Scripts/jqm.autoComplete-*",
+                                                                        "~/Scripts/jquery.swipeButton-*"));
+
+
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/mobilecss").Include("~/Content/jquery.mobile*"));
@@ -43,6 +47,8 @@ namespace NGnono.FMNote.WebSite4App.Core.App_Start
                         "~/Content/themes/base/jquery.ui.theme.css"));
 
             bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include("~/Content/bootstrap/bootstrap*"));
+
+            bundles.Add(new StyleBundle("~/Content/jqmwidgetcss").Include("~/Content/jquery.swipeButton-*"));
         }
     }
 }

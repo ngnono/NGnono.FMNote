@@ -31,22 +31,17 @@
             @Html.ValidationMessageFor(model => model.Mode)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.User_Id)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.User_Id)
-            @Html.ValidationMessageFor(model => model.User_Id)
-        </div>
-
-        <div class="editor-label">
+        <div>
             <label for="txt_tag_search">标签</label>
             <a href="@Url.Action("List", "Tag")">编辑</a>
+            <ul data-role="listview" id="ul_lst_tags" data-inset="true">
+            </ul>
         </div>
-        <div class="editor-field" id="div_tag_container">
-            <input type="search" id="txt_tag_search" value="" style="display: none;" />
-            <select name="select_tag" id="select_tag">
-            </select>
+
+        <div id="div_tag_container">
+            <input type="text" id="txt_tag_search" value="" />
+
+            <ul id="suggestions" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" data-inset="true" data-role="listview"></ul>
         </div>
 
         <div class="editor-label">
@@ -92,13 +87,93 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+@section HeaderStyles{
+    @Styles.Render("~/Content/jqmwidgetcss")
+}
 
 @section FooterScripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqmwidget")
 
     <script type="text/javascript">
         $(document).ready(init);
         var extendCount = 1;
+
+        function getJsonData(str) {
+            return eval("(" + str + ")");
+        }
+
+        //tag event
+        //+
+        var tagCount = 0;
+        var tagLimit = 3;
+        //+-
+        var tagTotal = 0;
+
+        function tagEventInit() {
+            $('#txt_tag_search').autocomplete({
+                target: $('#suggestions'),
+                source: '@Url.Action("Search", "Tag")',
+                minLength: 1,
+                builder: function (data, settings) {
+                    var str = [];
+                    var vclass = '';
+
+                    if (settings.klass) {
+                        vclass = 'class="' + settings.klass + '"';
+                    }
+                    if (data) {
+                        if (settings.dataHandler) {
+                            data = settings.dataHandler(data);
+                        }
+                        $.each(data, function (index, value) {
+                            // are we working with objects or strings?
+                            if ($.isPlainObject(value)) {
+                                if (settings.transformResponse) {
+                                    value = settings.transformResponse(value);
+                                }
+                                str.push('<li ' + vclass + ' data-icon=' + settings.icon + '><a href="' + settings.link + encodeURIComponent(value.value) + '" data-transition="' + settings.transition + '" data-autocomplete=\'' + JSON.stringify(value).replace(/'/g, "&#39;") + '\'>' + settings.labelHTML(value.label) + '</a></li>');
+                            } else {
+                                str.push('<li ' + vclass + ' data-icon=' + settings.icon + '><a href="' + settings.link + encodeURIComponent(value) + '" data-transition="' + settings.transition + '">' + settings.labelHTML(value) + '</a></li>');
+                            }
+                        });
+                    }
+
+                    return str;
+                },
+                callback: function (e) {
+                    var $a = $(e.currentTarget);
+                    var d = getJsonData($a.attr('data-autocomplete'));
+                    if (tagTotal >= tagLimit) {
+                        alert('tag 标签最多选择3个！');
+                        return;
+                    }
+
+                    tagCount++;
+                    tagTotal++;
+                    $('#ul_lst_tags').append('<li id="li_tags_' + tagCount + '"><input type="hidden" name="tags" value="' + d.value + '" /><a href="javascript:void(0);" title="' + $a.text() + '">' + $a.text() + '</a></li>');
+
+                    //alert($('#ul_lst_tags').html());
+
+                    $('#ul_lst_tags li').swipeDelete({
+                        click: function (e2) {
+                            e2.preventDefault();
+                            $(this).parents('li').remove();
+                            tagTotal--;
+                        }
+                    });
+
+
+                    $('#ul_lst_tags').trigger('create');
+                    $('#txt_tag_search').val($a.text()); // place the value of the selection into the search box
+                    $("#txt_tag_search").autocomplete('clear'); // clear the listview
+                }
+
+            });
+        }
+
+        //categroy event
+
 
         function init() {
             var $btn = $('#btn_addExtend');
@@ -151,14 +226,21 @@
                 $.getJSON('@Url.Action("Search", "Category")', params, function (json) {
                     var $s = $('#select_category');
                     $s.empty();
-
                     for (var i = 0; i < json.length; i++) {
+                        alert(json[i].Id);
                         $s.append('<option value="' + json[i].Id + '">' + json[i].Name + '<option>');
                     }
+
+                    $s.show();
+
+                    $s.trigger('create');
                 });
             });
+
+            //tag
+            tagEventInit();
         }
-        
+
         function delHtml(id) {
             $('#' + id).remove();
         }

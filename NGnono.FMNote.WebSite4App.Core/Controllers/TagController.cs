@@ -173,5 +173,37 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         {
             return View(model);
         }
+
+        public ActionResult Search(SearchOptions searchOptions)
+        {
+            //var datas =
+            //    ServiceInvoke(
+            //        u =>
+            //        u.TagRepository.Get(
+            //            v => v.User_Id == CurrentUser.CustomerId && v.Name.Contains(searchOptions.Term) || v.SecName.Contains(searchOptions.Term)).Select(v => new
+            //                {
+            //                    value = v.Id,
+            //                    label = v.Name
+            //                }).Take(10).ToList());
+
+
+            var datas = (new int[] { 1, 2, 3 }).Select(v => new
+                {
+                    value = v,
+                    label = String.Format("{0}-{1}", v, "中文")
+                }).ToList();
+
+
+            var json = new JsonResult { Data = datas, ContentEncoding = Encoding.UTF8, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+            return json;
+        }
+    }
+
+    public class SearchOptions
+    {
+        public string Term { get; set; }
+
+        public string Format { get; set; }
     }
 }

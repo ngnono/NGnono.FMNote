@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using NGnono.FMNote.Datas.Models;
+﻿using NGnono.FMNote.Datas.Models;
 using NGnono.FMNote.Models.Enums;
 using NGnono.FMNote.Repository;
 using NGnono.FMNote.WebSite4App.Core.Models.ViewModel;
@@ -16,6 +8,12 @@ using NGnono.FMNote.WebSupport.Mvc.Filters;
 using NGnono.Framework.Data.EF;
 using NGnono.Framework.Mapping;
 using NGnono.Framework.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Web.Mvc;
 
 namespace NGnono.FMNote.WebSite4App.Core.Controllers
 {
@@ -62,7 +60,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         private static Func<IQueryable<CategoryEntity>, IOrderedQueryable<CategoryEntity>> OrderBy(CategorySortOptions sortOptions)
         {
-            Func<IQueryable<CategoryEntity>, IOrderedQueryable<CategoryEntity>> orderBy = null;
+            Func<IQueryable<CategoryEntity>, IOrderedQueryable<CategoryEntity>> orderBy;
 
             switch (sortOptions)
             {
@@ -72,6 +70,28 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
             }
 
             return orderBy;
+        }
+
+        private string CheckCategory(CategoryEntity entity)
+        {
+            var msg = ServiceInvoke(
+                u =>
+                {
+                    var c1 = u.CategoryRepository.Get(
+                        v =>
+                        v.Name.Equals(entity.Name, StringComparison.OrdinalIgnoreCase) &&
+                        v.User_Id == entity.User_Id && v.Id != entity.Id).Any();
+                    if (c1)
+                    {
+                        return "分类名称重了，请换个先";
+                    }
+
+                    return null;
+                });
+
+            AppendErrorSummary(msg);
+
+            return msg;
         }
 
         #endregion
@@ -97,7 +117,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("List");
         }
 
         [HttpGet]
@@ -109,8 +129,6 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         [HttpPost]
         public ActionResult Create(FormCollection formCollection, CategoryCreateViewModel vo, string returnUrl)
         {
-            //var result = new ExecuteResult<int>();
-
             if (ModelState.IsValid)
             {
                 var tmpEntity = Mapper.Map<CategoryCreateViewModel, CategoryEntity>(vo);
@@ -121,19 +139,23 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
                 tmpEntity.CreatedUser = CurrentUser.CustomerId;
                 tmpEntity.User_Id = CurrentUser.CustomerId;
 
-                var entity = ServiceInvoke(unitOfWork => unitOfWork.CategoryRepository.Insert(tmpEntity));
-
-                if (!Url.IsLocalUrl(returnUrl))
+                var msg = CheckCategory(tmpEntity);
+                if (String.IsNullOrEmpty(msg))
                 {
-                    returnUrl = Url.Action("Index");
-                }
+                    var entity = ServiceInvoke(unitOfWork => unitOfWork.CategoryRepository.Insert(tmpEntity));
 
-                return Success(new SuccessViewModel
+                    if (!Url.IsLocalUrl(returnUrl))
+                    {
+                        returnUrl = Url.Action("Index");
+                    }
+
+                    return Success(new SuccessViewModel
                     {
                         Msg = String.Format("分类:{0} 添加成功。", entity.Name),
                         RedirectUrl = returnUrl,
                         RedirectText = "返回"
                     });
+                }
             }
 
             return View(vo);
@@ -143,14 +165,41 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
         public ActionResult Edit([FetchCategory(KeyName = "id")]CategoryEntity model)
         {
-            return View(model);
+            var vo = Mapper.Map<CategoryEntity, CategoryEditViewModel>(model);
+
+            return View(vo);
         }
 
         [HttpPost]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
-        public ActionResult Edit(FormCollection formCollection, [FetchCategory(KeyName = "id")]CategoryEntity model)
+        public ActionResult Edit(FormCollection formCollection, [FetchCategory(KeyName = "id")]CategoryEntity model, CategoryEditViewModel editViewModel, string returnUrl)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var tmpEntity = Mapper.Map<CategoryEditViewModel, CategoryEntity>(editViewModel);
+                tmpEntity.Status = model.Status;
+                tmpEntity.UpdatedDate = DateTime.Now;
+                tmpEntity.UpdatedUser = CurrentUser.CustomerId;
+                tmpEntity.CreatedDate = model.CreatedDate;
+                tmpEntity.CreatedUser = model.CreatedUser;
+                tmpEntity.User_Id = model.User_Id;
+
+                var msg = CheckCategory(tmpEntity);
+
+                if (String.IsNullOrEmpty(msg))
+                {
+                    ServiceInvoke(u => u.CategoryRepository.Update(tmpEntity));
+
+                    return Success(new SuccessViewModel
+                    {
+                        Msg = String.Format("分类:{0} 编辑成功。", tmpEntity.Name),
+                        RedirectUrl = returnUrl,
+                        RedirectText = "返回"
+                    });
+                }
+            }
+
+            return View(editViewModel);
         }
 
         [HttpGet]
@@ -162,22 +211,21 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
 
         [HttpPost]
         [ModelOwnerCheck(TakeParameterName = "model", CustomerPropertyName = "User_Id")]
-        public ActionResult Delete(FormCollection formCollection, [FetchCategory(KeyName = "id")]CategoryEntity model)
+        public ActionResult Delete(FormCollection formCollection, [FetchCategory(KeyName = "id")]CategoryEntity model, string returnUrl)
         {
             model.UpdatedDate = DateTime.Now;
             model.UpdatedUser = CurrentUser.CustomerId;
             model.Status = (int)DataStatus.None;
 
-            var jsonResult = new JsonResult { ContentEncoding = Encoding.UTF8 };
-
-            var result = new ExecuteResult<int>();
-
-
+            var n = model.Name;
             ServiceInvoke<NGnono_FMNoteContextUnitOfWork>(v => v.CategoryRepository.Update(model));
 
-            jsonResult.Data = result;
-
-            return jsonResult;
+            return Success(new SuccessViewModel
+            {
+                Msg = String.Format("分类:{0} 编辑成功。", n),
+                RedirectUrl = returnUrl,
+                RedirectText = "返回"
+            });
         }
 
         [HttpGet]
@@ -185,7 +233,7 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         {
             var paged = GetList(pagerRequest, filter, sort ?? CategorySortOptions.Default);
 
-            return View(paged);
+            return View("List", paged);
         }
 
         [HttpGet]
