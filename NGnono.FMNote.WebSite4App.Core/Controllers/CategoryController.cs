@@ -1,4 +1,6 @@
-﻿using NGnono.FMNote.Datas.Models;
+﻿using System.Collections;
+using System.Globalization;
+using NGnono.FMNote.Datas.Models;
 using NGnono.FMNote.Models.Enums;
 using NGnono.FMNote.Repository;
 using NGnono.FMNote.WebSite4App.Core.Models.ViewModel;
@@ -8,6 +10,7 @@ using NGnono.FMNote.WebSupport.Mvc.Filters;
 using NGnono.Framework.Data.EF;
 using NGnono.Framework.Mapping;
 using NGnono.Framework.Models;
+using NGnono.Framework.Extension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -242,5 +245,270 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         {
             return View(model);
         }
+
+        public ActionResult GetAll(string fromat)
+        {
+            const string rawSql = @" WITH DATA AS (
+                  SELECT [Id]
+                        ,[Name]
+                        ,[SecName]
+                        ,[Index]
+                        ,[ParentId]
+                        ,[Description]
+                        ,[Type]
+                        ,[User_Id]
+                        ,[Status]
+                        ,[SortOrder]
+                        ,[CreatedDate]
+                        ,[CreatedUser]
+                        ,[UpdatedDate]
+                        ,[UpdatedUser]
+                        ,CAST([Id] AS VARCHAR) AS Ids
+                        ,CAST([Name] AS NVARCHAR) AS [Path]
+                        ,0 AS Depth
+                        ,ROW_NUMBER() OVER(ORDER BY [SortOrder] DESC) AS 
+                         RowNumber
+                  FROM   [dbo].[Category] AS g WITH (NOLOCK)
+                  WHERE  [User_Id] = {0}
+                         AND g.ParentId = 0
+                  UNION ALL
+                  SELECT s.[Id]
+                        ,s.[Name]
+                        ,s.[SecName]
+                        ,s.[Index]
+                        ,s.[ParentId]
+                        ,s.[Description]
+                        ,s.[Type]
+                        ,s.[User_Id]
+                        ,s.[Status]
+                        ,s.[SortOrder]
+                        ,s.[CreatedDate]
+                        ,s.[CreatedUser]
+                        ,s.[UpdatedDate]
+                        ,s.[UpdatedUser]
+                        ,CAST(DATA.Ids + '->' + CAST(s.[Id] AS VARCHAR) AS VARCHAR) AS 
+                         Ids
+                        ,CAST(DATA.[Path] + '->' + s.[Name] AS NVARCHAR) AS 
+                         [Path]
+                        ,DATA.[Depth] + 1 AS Depth
+                        ,DATA.RowNumber
+                  FROM   [dbo].[Category] AS s WITH(NOLOCK)
+                         INNER JOIN DATA
+                              ON  s.ParentID = DATA.Id
+              )
+SELECT *
+FROM   DATA
+ORDER BY
+       RowNumber
+      ,Depth
+      ,[SortOrder] DESC;";
+
+            var datas = ServiceInvoke(u => u.DbContext.Database.SqlQuery<CategoryStructViewModel>(rawSql, CurrentUser.CustomerId).ToList());
+
+            var list = new List<TreeStruct>();
+            TreeStruct lastTree = null;
+            TreeStruct l2 = null;
+            foreach (var item in datas)
+            {
+                if (item.Depth == 0)
+                {
+                    lastTree = new TreeStruct
+                        {
+                            Id = item.Id.ToString(CultureInfo.InvariantCulture),
+                            Name = item.Name,
+                            ParentId = item.ParentId.ToString(CultureInfo.InvariantCulture)
+                        };
+
+                    list.Add(lastTree);
+
+                    continue;
+                }
+
+                if (lastTree == null)
+                {
+                    continue;
+                }
+
+                if (item.Depth == 1)
+                {
+                    l2 = new TreeStruct
+                        {
+                            Id = item.Id.ToString(CultureInfo.InvariantCulture),
+                            Name = item.Name,
+                            ParentId = item.ParentId.ToString(CultureInfo.InvariantCulture)
+                        };
+
+                    lastTree.Childs.Add(l2);
+
+                    continue;
+                }
+
+                if (l2 == null)
+                {
+                    continue;
+                }
+
+                l2.Childs.Add(new TreeStruct
+                {
+                    Id = item.Id.ToString(CultureInfo.InvariantCulture),
+                    Name = item.Name,
+                    ParentId = item.ParentId.ToString(CultureInfo.InvariantCulture)
+                });
+
+            }
+
+            var content = new ContentResult {Content = GTree(list)};
+
+            return content;
+        }
+
+
+        #region 老版本 有性能问题
+
+        public ActionResult GetData()
+        {
+            //TODO:这个list集合查找 性能差，看看有没有好的性能提升方法
+
+            const string rawSql = @"  WITH DATA AS (
+                   SELECT [Id]
+                         ,[Name]
+                         ,[SecName]
+                         ,[Index]
+                         ,[ParentId]
+                         ,[Description]
+                         ,[Type]
+                         ,[User_Id]
+                         ,[Status]
+                         ,[SortOrder]
+                         ,[CreatedDate]
+                         ,[CreatedUser]
+                         ,[UpdatedDate]
+                         ,[UpdatedUser]
+                         ,CAST([Id] AS VARCHAR) AS Ids
+                         ,CAST([Name] AS NVARCHAR) AS [Path]
+                         ,0 AS Depth
+                   FROM   [dbo].[Category] AS g WITH (NOLOCK)
+                   WHERE  [User_Id] = {0}
+                          AND g.ParentId = 0
+                   UNION ALL
+                   SELECT s.[Id]
+                         ,s.[Name]
+                         ,s.[SecName]
+                         ,s.[Index]
+                         ,s.[ParentId]
+                         ,s.[Description]
+                         ,s.[Type]
+                         ,s.[User_Id]
+                         ,s.[Status]
+                         ,s.[SortOrder]
+                         ,s.[CreatedDate]
+                         ,s.[CreatedUser]
+                         ,s.[UpdatedDate]
+                         ,s.[UpdatedUser]
+                         ,CAST(DATA.Ids + '->' + CAST(s.[Id] AS VARCHAR) AS VARCHAR) AS 
+                          Ids
+                         ,CAST(DATA.[Path] + '->' + s.[Name] AS NVARCHAR) AS 
+                          [Path]
+                         ,DATA.[Depth] + 1 AS Depth
+                   FROM   [dbo].[Category] AS s WITH(NOLOCK)
+                          INNER JOIN DATA
+                               ON  s.ParentID = DATA.Id
+               )
+SELECT *
+FROM   DATA
+ORDER BY
+       [Depth] ASC
+      ,[SortOrder] DESC";
+
+            var datas = ServiceInvoke(u => u.DbContext.Database.SqlQuery<CategoryStructViewModel>(rawSql, CurrentUser.CustomerId).ToList());
+
+            var t = AddTree(datas, 0, 2);
+
+            return Content(GTree(t));
+        }
+
+        internal class TreeStruct
+        {
+            public TreeStruct()
+            {
+                Childs = new List<TreeStruct>();
+                ChildKeys = new HashSet<string>();
+            }
+
+            public string Id { get; set; }
+
+            public string Name { get; set; }
+
+            public string ParentId { get; set; }
+
+            public bool HasChild
+            {
+                get
+                {
+                    return Childs != null && Childs.Count != 0;
+                }
+            }
+
+            public List<TreeStruct> Childs { get; set; }
+
+            public HashSet<string> ChildKeys { get; set; }
+
+        }
+
+        private static List<TreeStruct> AddTree(List<CategoryStructViewModel> datas, int parentId, int breakLevel)
+        {
+            var ds = datas.Where(v => v.ParentId == parentId);
+
+            var list = new List<TreeStruct>();
+            foreach (var item in ds)
+            {
+                if (item.Depth > breakLevel)
+                {
+                    return list;
+                }
+
+                var treeNode = new TreeStruct
+                    {
+                        Id = item.Id.ToString(CultureInfo.InvariantCulture),
+                        Name = item.Name,
+                        ParentId = item.ParentId.ToString(CultureInfo.InvariantCulture)
+                    };
+
+                var childs = AddTree(datas.Where(v => v.Depth > item.Depth).ToList(), item.Id, breakLevel);
+
+                treeNode.Childs = childs;
+
+                list.Add(treeNode);
+            }
+
+            return list;
+        }
+
+        private const string LiFormat = "<li data-val=\"{0}\">{1}";
+
+        private static string GTree(IEnumerable<TreeStruct> datas)
+        {
+
+            var sb = new StringBuilder();
+            foreach (var item in datas)
+            {
+                sb.Append(String.Format(LiFormat, item.Id, item.Name));
+
+                if (item.HasChild)
+                {
+                    sb.Append("<ul>");
+
+                    sb.Append(GTree(item.Childs));
+
+                    sb.Append("</ul>");
+                }
+
+                sb.Append("</li>");
+            }
+
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }

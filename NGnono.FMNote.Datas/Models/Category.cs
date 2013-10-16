@@ -25,6 +25,8 @@ namespace NGnono.FMNote.Datas.Models
         public int UpdatedUser { get; set; }
         public virtual ICollection<BillEntity> Bills { get; set; }
 
+        public int ParentId { get; set; }
+
         #region Overrides of BaseEntity
 
         /// <summary>

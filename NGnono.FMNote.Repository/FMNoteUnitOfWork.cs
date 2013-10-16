@@ -10,6 +10,11 @@ namespace NGnono.FMNote.Repository
     public interface INGnono_FMNoteContextEFUnitOfWork : IUnitOfWork
     {
         /// <summary>
+        /// DbContext
+        /// </summary>
+        DbContext DbContext { get; }
+
+        /// <summary>
         /// AdminAccessRight
         /// </summary>
         EFRepository<AdminAccessRightEntity, int> AdminAccessRightRepository { get; }
@@ -351,6 +356,11 @@ namespace NGnono.FMNote.Repository
         #endregion
 
         #region porperties
+
+        DbContext INGnono_FMNoteContextEFUnitOfWork.DbContext
+        {
+            get { return DbContext; }
+        }
 
         /// <summary>
         /// AdminAccessRightEntity

@@ -8,6 +8,15 @@ using NGnono.FMNote.Datas.Models;
 
 namespace NGnono.FMNote.WebSite4App.Core.Models.ViewModel
 {
+
+    public class CategoryStructViewModel : CategoryEditViewModel
+    {
+        public string Ids { get; set; }
+        public string Path { get; set; }
+
+        public int Depth { get; set; }
+    }
+
     public class CategoryInfoViewModel : BaseViewModel
     {
         [StringLength(128, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 0)]
@@ -32,6 +41,8 @@ namespace NGnono.FMNote.WebSite4App.Core.Models.ViewModel
         public int User_Id { get; set; }
         [Range(0, Int32.MaxValue)]
         public int SortOrder { get; set; }
+
+        public int ParentId { get; set; }
     }
 
 

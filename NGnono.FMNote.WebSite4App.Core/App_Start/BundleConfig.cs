@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Web.Optimization;
 
 namespace NGnono.FMNote.WebSite4App.Core.App_Start
@@ -8,6 +9,16 @@ namespace NGnono.FMNote.WebSite4App.Core.App_Start
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.IgnoreList.Clear();
+
+            //bundles.IgnoreList.Ignore("*.intellisense.js");
+            //bundles.IgnoreList.Ignore("*-vsdoc.js");
+            //bundles.IgnoreList.Ignore("*.debug.js", OptimizationMode.WhenEnabled);
+            //ignoreList.Ignore("*.min.js", OptimizationMode.WhenDisabled);
+            //bundles.IgnoreList.Ignore("*.min.css", OptimizationMode.WhenDisabled);
+
+
+            //
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-2.*"));
 
@@ -25,7 +36,7 @@ namespace NGnono.FMNote.WebSite4App.Core.App_Start
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/bootstrap*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqmwidget").Include("~/Scripts/jqm.autoComplete-*",
-                                                                        "~/Scripts/jquery.swipeButton-*"));
+                                                                        "~/Scripts/jquery.swipeButton-*", "~/Scripts/mobiscroll*"));
 
 
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
@@ -48,7 +59,7 @@ namespace NGnono.FMNote.WebSite4App.Core.App_Start
 
             bundles.Add(new StyleBundle("~/Content/bootstrapcss").Include("~/Content/bootstrap/bootstrap*"));
 
-            bundles.Add(new StyleBundle("~/Content/jqmwidgetcss").Include("~/Content/jquery.swipeButton-*"));
+            bundles.Add(new StyleBundle("~/Content/jqmwidgetcss").Include("~/Content/jquery.swipeButton-*", "~/Content/mobiscroll*"));
         }
     }
 }

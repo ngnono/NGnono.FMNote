@@ -120,6 +120,11 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
 
 	public interface I<#= efHost.EntityContainer.Name #>EFUnitOfWork : IUnitOfWork
 	{
+	    /// <summary>
+        /// DbContext
+        /// </summary>
+        DbContext DbContext { get; }
+
 <#
     foreach (var set in efHost.EntityContainer.BaseEntitySets.OfType<EntitySet>())
     {
@@ -166,6 +171,11 @@ namespace <#= code.EscapeNamespace(efHost.Namespace) #>
 		#endregion
 
         #region porperties
+
+		DbContext <#= efHost.EntityContainer.Name #>UnitOfWork.DbContext
+        {
+            get { return DbContext; }
+        }
 
 <#
     foreach (var set in efHost.EntityContainer.BaseEntitySets.OfType<EntitySet>())

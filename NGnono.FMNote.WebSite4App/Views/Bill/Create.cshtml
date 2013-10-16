@@ -48,11 +48,9 @@
             <label for="txt_category_search">分类</label>
             <a href="@Url.Action("List", "Category")">编辑</a>
         </div>
-        <div class="editor-field" id="div_category_container">
-            <input type="search" id="txt_category_search" value="" style="display: none;" />
-            <select name="select_category" id="select_category">
-            </select>
-        </div>
+
+        <ul id="ul_ctg">
+        </ul>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.Type)
@@ -81,12 +79,13 @@
             <input type="submit" value="Create" />
         </p>
     </fieldset>
-  
+    
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
 @section HeaderStyles{
     @Styles.Render("~/Content/jqmwidgetcss")
 }
@@ -168,12 +167,28 @@
                     $('#txt_tag_search').val($a.text()); // place the value of the selection into the search box
                     $("#txt_tag_search").autocomplete('clear'); // clear the listview
                 }
-
             });
         }
 
         //categroy event
 
+        function categoryInit() {
+            var $ul = $('#ul_ctg');
+
+            $.get('@Url.Action("GetAll", "Category")', function (result) {
+                $ul.html(result);
+                $ul.mobiscroll().treelist({
+                    theme: 'default',
+                    lang: 'zh',
+                    display: 'bottom',
+                    mode: 'scroller',
+                    labels: ['1级', '2级', '3级'],
+                });
+                
+                $('#ul_ctg_dummy').trigger('create');
+            });
+            
+        }
 
         function init() {
             var $btn = $('#btn_addExtend');
@@ -207,36 +222,9 @@
                 $btn.enable = true;
             });
 
-            $('#div_category_container').bind('click', function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                $('#txt_category_search').show();
-                $('#select_category').hide();
-            }).focus(function (e) {
-                $('#select_category').show();
-            }).blur(function (e) {
-                $('#txt_category_search').hide();
-                $('#select_category').show();
-            });
 
-            $('#txt_category_search').keyup(function (e) {
-                var t = $('#txt_category_search');
-                var k = t.val();
-                var params = 'k=' + k;
-                $.getJSON('@Url.Action("Search", "Category")', params, function (json) {
-                    var $s = $('#select_category');
-                    $s.empty();
-                    for (var i = 0; i < json.length; i++) {
-                        alert(json[i].Id);
-                        $s.append('<option value="' + json[i].Id + '">' + json[i].Name + '<option>');
-                    }
-
-                    $s.show();
-
-                    $s.trigger('create');
-                });
-            });
-
+            //categor
+            categoryInit();
             //tag
             tagEventInit();
         }
