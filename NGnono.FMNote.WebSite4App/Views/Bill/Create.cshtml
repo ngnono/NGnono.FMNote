@@ -114,7 +114,7 @@
                 target: $('#suggestions'),
                 source: '@Url.Action("Search", "Tag")',
                 minLength: 1,
-                builder: function (data, settings) {
+                builder: function(data, settings) {
                     var str = [];
                     var vclass = '';
 
@@ -125,7 +125,7 @@
                         if (settings.dataHandler) {
                             data = settings.dataHandler(data);
                         }
-                        $.each(data, function (index, value) {
+                        $.each(data, function(index, value) {
                             // are we working with objects or strings?
                             if ($.isPlainObject(value)) {
                                 if (settings.transformResponse) {
@@ -140,7 +140,7 @@
 
                     return str;
                 },
-                callback: function (e) {
+                callback: function(e) {
                     var $a = $(e.currentTarget);
                     var d = getJsonData($a.attr('data-autocomplete'));
                     if (tagTotal >= tagLimit) {
@@ -155,7 +155,7 @@
                     //alert($('#ul_lst_tags').html());
 
                     $('#ul_lst_tags li').swipeDelete({
-                        click: function (e2) {
+                        click: function(e2) {
                             e2.preventDefault();
                             $(this).parents('li').remove();
                             tagTotal--;
@@ -175,24 +175,27 @@
         function categoryInit() {
             var $ul = $('#ul_ctg');
 
-            $.get('@Url.Action("GetAll", "Category")', function (result) {
+            $.get('@Url.Action("GetAll", "Category")', function(result) {
                 $ul.html(result);
                 $ul.mobiscroll().treelist({
                     theme: 'default',
                     lang: 'zh',
                     display: 'bottom',
                     mode: 'scroller',
-                    labels: ['1级', '2级', '3级'],
+                    //labels: ['1级', '2级', '3级'],
+                    onSelect: function (vt, inst) {
+                        alert(inst.getText());
+                    }
                 });
-                
+
                 $('#ul_ctg_dummy').trigger('create');
             });
-            
+
         }
 
         function init() {
             var $btn = $('#btn_addExtend');
-            $btn.bind('click', function (event) {
+            $btn.bind('click', function(event) {
                 event.stopPropagation();
                 event.preventDefault();
                 $btn.enable = false;
@@ -200,7 +203,7 @@
                 $('#div_extend_container').append(extendHtml);
 
                 var $ec = $('#div_extend_' + extendCount);
-                $ec.bind('click', function (event1) {
+                $ec.bind('click', function(event1) {
                     event1.stopPropagation();
                     event1.preventDefault();
                     $ec.enable = false;
