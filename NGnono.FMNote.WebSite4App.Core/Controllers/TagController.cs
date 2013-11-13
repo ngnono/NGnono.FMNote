@@ -159,10 +159,10 @@ namespace NGnono.FMNote.WebSite4App.Core.Controllers
         }
 
         [HttpGet]
-        public ActionResult List(PagerRequest pagerRequest, TagFilterOptions filterOptions, TagSortOptions sortOptions)
+        public ActionResult List(PagerRequest pagerRequest, TagFilterOptions filter, TagSortOptions? sort)
         {
-            filterOptions.UserId = CurrentUser.CustomerId;
-            var paged = GetList(pagerRequest, filterOptions, sortOptions);
+            filter.UserId = CurrentUser.CustomerId;
+            var paged = GetList(pagerRequest, filter, sort ?? TagSortOptions.Default);
 
             return View(paged);
         }

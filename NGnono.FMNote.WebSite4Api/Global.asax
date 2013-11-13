@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="NGnono.FMNote.WebSite4Api.MvcApplication" Language="C#" %>
+﻿<%@ Application Inherits="NGnono.FMNote.WebSite4Api.Core.MvcApplication" Language="C#" %>

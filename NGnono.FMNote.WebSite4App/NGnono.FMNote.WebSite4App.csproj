@@ -228,15 +228,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\mobiscroll-2.8.0.full.min.css" />
-    <Content Include="Content\mobiscroll.android-2.8.0.css" />
-    <Content Include="Content\mobiscroll.android-ics-2.8.0.css" />
     <Content Include="Content\mobiscroll.animation-2.8.0.css" />
     <Content Include="Content\mobiscroll.core-2.8.0.css" />
-    <Content Include="Content\mobiscroll.ios-2.8.0.css" />
-    <Content Include="Content\mobiscroll.ios7-2.8.0.css" />
     <Content Include="Content\mobiscroll.jqm-2.8.0.css" />
     <Content Include="Content\mobiscroll.sense-ui-2.8.0.css" />
-    <Content Include="Content\mobiscroll.wp-2.8.0.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -317,9 +312,11 @@
     <Content Include="Configs\unity.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="log4net.config">
+    <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <None Include="Properties\PublishProfiles\f.pubxml" />
+    <None Include="Properties\PublishProfiles\v2.pubxml" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -387,16 +384,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\mobiscroll-2.8.0.full.min.js" />
-    <Content Include="Scripts\mobiscroll.android-2.8.0.js" />
-    <Content Include="Scripts\mobiscroll.android-ics-2.8.0.js" />
     <Content Include="Scripts\mobiscroll.core-2.8.0.js" />
     <Content Include="Scripts\mobiscroll.datetime-2.8.0.js" />
-    <Content Include="Scripts\mobiscroll.ios-2.8.0.js" />
-    <Content Include="Scripts\mobiscroll.ios7-2.8.0.js" />
     <Content Include="Scripts\mobiscroll.jqm-2.8.0.js" />
     <Content Include="Scripts\mobiscroll.list-2.8.0.js" />
     <Content Include="Scripts\mobiscroll.select-2.8.0.js" />
-    <Content Include="Scripts\mobiscroll.wp-2.8.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

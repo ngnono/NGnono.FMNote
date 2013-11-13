@@ -47,6 +47,7 @@
         <div class="editor-label">
             <label for="txt_category_search">分类</label>
             <a href="@Url.Action("List", "Category")">编辑</a>
+            <input name="categoryid" type="hidden" id="categoryid" />
         </div>
 
         <ul id="ul_ctg">
@@ -95,6 +96,18 @@
     @Scripts.Render("~/bundles/jqmwidget")
 
     <script type="text/javascript">
+        String.prototype.trim = function () {
+            return this.replace(/(^\s*)|(\s*$)/g, "");
+        };
+        String.prototype.ltrim = function () {
+            return this.replace(/(^\s*)/g, "");
+        };
+        String.prototype.rtrim = function () {
+            return this.replace(/(\s*$)/g, "");
+        };
+    </script>
+
+    <script type="text/javascript">
         $(document).ready(init);
         var extendCount = 1;
 
@@ -114,7 +127,7 @@
                 target: $('#suggestions'),
                 source: '@Url.Action("Search", "Tag")',
                 minLength: 1,
-                builder: function(data, settings) {
+                builder: function (data, settings) {
                     var str = [];
                     var vclass = '';
 
@@ -125,7 +138,7 @@
                         if (settings.dataHandler) {
                             data = settings.dataHandler(data);
                         }
-                        $.each(data, function(index, value) {
+                        $.each(data, function (index, value) {
                             // are we working with objects or strings?
                             if ($.isPlainObject(value)) {
                                 if (settings.transformResponse) {
@@ -140,7 +153,7 @@
 
                     return str;
                 },
-                callback: function(e) {
+                callback: function (e) {
                     var $a = $(e.currentTarget);
                     var d = getJsonData($a.attr('data-autocomplete'));
                     if (tagTotal >= tagLimit) {
@@ -155,7 +168,7 @@
                     //alert($('#ul_lst_tags').html());
 
                     $('#ul_lst_tags li').swipeDelete({
-                        click: function(e2) {
+                        click: function (e2) {
                             e2.preventDefault();
                             $(this).parents('li').remove();
                             tagTotal--;
@@ -175,7 +188,7 @@
         function categoryInit() {
             var $ul = $('#ul_ctg');
 
-            $.get('@Url.Action("GetAll", "Category")', function(result) {
+            $.get('@Url.Action("GetAll", "Category")', function (result) {
                 $ul.html(result);
                 $ul.mobiscroll().treelist({
                     theme: 'default',
@@ -184,7 +197,12 @@
                     mode: 'scroller',
                     //labels: ['1级', '2级', '3级'],
                     onSelect: function (vt, inst) {
-                        alert(inst.getText());
+                        alert(vt);
+                        alert(inst.getValues());
+                        var ids = vt.trim().split(' ');
+                        var id = ids[ids.length - 1];
+                        alert(id);
+                        $('#categoryid').val(id);
                     }
                 });
 
@@ -195,7 +213,7 @@
 
         function init() {
             var $btn = $('#btn_addExtend');
-            $btn.bind('click', function(event) {
+            $btn.bind('click', function (event) {
                 event.stopPropagation();
                 event.preventDefault();
                 $btn.enable = false;
@@ -203,7 +221,7 @@
                 $('#div_extend_container').append(extendHtml);
 
                 var $ec = $('#div_extend_' + extendCount);
-                $ec.bind('click', function(event1) {
+                $ec.bind('click', function (event1) {
                     event1.stopPropagation();
                     event1.preventDefault();
                     $ec.enable = false;
